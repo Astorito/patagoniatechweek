@@ -68,6 +68,14 @@
     .vanish-item { opacity:0; }
     .vanish-item.revealed { animation: vanishIn 0.7s cubic-bezier(0.22,1,0.36,1) forwards; }
 
+    /* ── Text reveal words ── */
+    .reveal-word {
+      display: inline;
+      color: white;
+      opacity: 0.1;
+      transition: opacity 0.05s linear;
+    }
+
     /* ── Click-to-dismiss stacked cards ── */
     .click-card {
       position: absolute;
@@ -102,15 +110,9 @@
     .strip-cta { display:inline-flex; align-items:center; gap:6px; margin-top:0.8rem; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(188,202,189,0.9); opacity:0; transform:translateX(-5px); transition:opacity 0.3s ease 0.2s,transform 0.3s ease 0.2s; }
     .strip:hover .strip-cta { opacity:1; transform:translateX(0); }
 
-    /* ── Video backgrounds (Temáticas) ── */
-    .tematica-video {
-      position:absolute; inset:0; width:100%; height:100%;
-      object-fit:cover; display:block;
-    }
-    .video-overlay {
-      position:absolute; inset:0;
-      background: rgba(8,10,8,0.55);
-    }
+    /* ── Video backgrounds ── */
+    .tematica-video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+    .video-overlay  { position:absolute; inset:0; background: rgba(8,10,8,0.55); }
   </style>
 </head>
 
@@ -125,88 +127,50 @@
 
   <main>
 
-    <!-- ══ HERO (300vh): postcard → full bleed ══ -->
+    <!-- ══ 1. HERO (300vh) ══ -->
     <section id="hero-scroll" style="height:300vh; position:relative;">
       <div id="hero-sticky" style="position:sticky; top:0; height:100vh; background:#0d0f0d; display:flex; align-items:center; justify-content:center; overflow:hidden;">
 
         <div id="hero-card" style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:30vw; height:58vh; border-radius:32px; overflow:hidden; will-change:width,height,border-radius;">
-
-          <!-- Layer 1: imagen de fondo -->
           <img src="san-martin.jpg" alt="San Martín de los Andes" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;" loading="eager">
 
-          <!-- Layer 2: texto -->
           <div id="hero-text" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; opacity:0; pointer-events:none; user-select:none; z-index:2;">
             <span style="font-family:'Open Sans',sans-serif; font-size:clamp(10px,1.3vw,18px); font-weight:700; color:rgba(255,255,255,0.78); letter-spacing:0.4em; text-transform:uppercase; margin-bottom:0.45em; white-space:nowrap;">Tech Week</span>
             <span style="font-family:'Hanken Grotesk',sans-serif; font-size:clamp(52px,11vw,170px); font-weight:700; color:rgba(255,255,255,0.95); letter-spacing:0.04em; line-height:1; white-space:nowrap; text-transform:uppercase;">PATAGONIA</span>
           </div>
 
-          <!-- Layer 3: foreground mask (árboles sobre texto) -->
           <img src="san-martin.jpg" aria-hidden="true" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:3; pointer-events:none; -webkit-mask-image:linear-gradient(to bottom,transparent 0%,transparent 44%,rgba(0,0,0,0.35) 52%,black 62%,black 100%); mask-image:linear-gradient(to bottom,transparent 0%,transparent 44%,rgba(0,0,0,0.35) 52%,black 62%,black 100%);">
         </div>
 
-        <!-- Gradiente estático inferior -->
         <div style="position:absolute; bottom:0; left:0; right:0; height:28%; background:linear-gradient(to bottom,transparent,#121412); z-index:15; pointer-events:none;"></div>
-
       </div>
     </section>
 
-    <!-- ══ SEDE ══ -->
-    <div class="relative z-20 w-[95%] mx-auto glass-panel -mt-28"
-         style="border-top:1px solid rgba(255,255,255,0.05); border-radius:3rem 3rem 0 0;">
+    <!-- ══ 2. TEXT REVEAL (scroll-driven) ══ -->
+    <section id="text-reveal-section" style="height:380vh; position:relative; background:#0d0f0d;">
+      <div style="position:sticky; top:0; height:100vh; display:flex; align-items:center; justify-content:center; overflow:hidden;">
 
-      <div id="venue" class="flex flex-col md:flex-row items-center gap-10 md:gap-16 p-10 md:px-20 md:py-16">
+        <!-- Subtle top gradient so it blends with hero -->
+        <div style="position:absolute; top:0; left:0; right:0; height:12vh; background:linear-gradient(to bottom,#121412,transparent); z-index:2; pointer-events:none;"></div>
 
-        <!-- Izquierda: texto SMA -->
-        <div class="flex-shrink-0 max-w-sm space-y-5">
-          <span class="vanish-item text-primary font-label-sm uppercase tracking-[0.3em] block">Sede</span>
-          <h2 class="vanish-item font-headline-lg text-[clamp(2rem,4vw,3.2rem)] leading-tight" style="animation-delay:80ms">San Martín<br>de los Andes</h2>
-          <p class="vanish-item font-body-lg text-on-surface-variant" style="animation-delay:160ms">Donde la precisión técnica encuentra la calma radical del bosque.</p>
-          <p class="vanish-item text-sm text-outline" style="animation-delay:240ms">Neuquén, Patagonia Argentina · Nov 2025</p>
-          <p class="vanish-item text-xs text-outline/60 flex items-center gap-1.5 pt-2" style="animation-delay:320ms">
-            <span class="material-symbols-outlined text-[14px]">touch_app</span>
-            Tocá las imágenes para explorar
+        <div style="max-width:880px; width:90%; text-align:left; padding:0 2rem; z-index:1;">
+          <p id="reveal-text"
+             style="font-family:'Hanken Grotesk',sans-serif; font-size:clamp(1.75rem,3.8vw,3.5rem); font-weight:600; line-height:1.35; letter-spacing:-0.01em;">
+            <!-- Each word is wrapped in a span by JS — see initTextReveal() -->
           </p>
         </div>
 
-        <!-- Derecha: pila de tarjetas -->
-        <div class="flex-1 flex justify-center md:justify-end">
-          <div id="sede-stack" class="relative" style="width:400px; height:310px;">
-
-            <div class="click-card" style="z-index:1; transform:rotate(-5deg) translate(-16px, 14px);">
-              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtgBBlD5dDy-ar3b5AoWQqiipCGNK_Hx02OinD9xJu_9i7hEaoBYAxcBNGUrpCzH0efXHojqI7khKEvTXcDJhDAH_Ht2P3qB-zAGHLUav1KIQyr3DrobppEeJR6rpDGebUnVjqVts6Mrlbrpk3P-KB6WuA1x-PiXNLMCSI-49I7WpK6R5amGgtDJfjxt7WRfbuEJq-4WExYEUBwUCohoVwPTpP1DlEI9NJ9XBVKPhvjtqdtiZdm8x9vMGau_OCe5jQ_9uAszXHxb-b" alt="Vista de SMA">
-            </div>
-            <div class="click-card" style="z-index:2; transform:rotate(3deg) translate(12px, 4px);">
-              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBO1TCAWx-faUrpfxbcTtfB_oANPhzF6Rxh_svaPzd4gP-yxo1GyDGd155hoJhA6L5n9q2_nSIc6K2C1iSN-tXGz0d1WcrIORRr2DwuUBOV8T6fnGbCmWubem5SssUd4YWe-cFXYYy5I1MMdvbELgr0gDIOUOyRGrnOTqbcW_i2FdljRPvoqnhvoOnArDO5rN9kThXRxTJzn-0yiQaEn_DgBXyOFJ3FkU2ZkRISZOaRETF8vpRjc-AfqK8zsZ6U0WidadDHKoBF9_6J" alt="Lago Lácar">
-            </div>
-            <div class="click-card" style="z-index:3; transform:rotate(-2deg) translate(-6px, -8px);">
-              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBI1OF5hn7pplzyG977-FEjCBSdk87ztdgMIzHjTmcaYiHXWA1myxzdA1uxAsfx9XUTq0RUtlwyYO40LetE2BB8RVuMzw80Hk39KTCk-rHtrIBfiqPObdJyMPSVOT3-ycazpIZs7HxqAbH59qfGoRIiGB70tU62XrVKRydIrK_eHfpt3EeqRD9OMfv8uP9df0wWinAgWxehmhFMATdcS83WptWaboJ9qOqkBs6lG6W9yA881N9fr6_Kf9yuod1_Pfy2qzb6U9j9Dzrc" alt="Bosque patagónico">
-            </div>
-            <div class="click-card top-card" style="z-index:4; transform:rotate(1.5deg) translate(6px, -22px);">
-              <img src="san-martin.jpg" alt="San Martín de los Andes">
-            </div>
-
-          </div>
-        </div>
-
+        <!-- Bottom gradient -->
+        <div style="position:absolute; bottom:0; left:0; right:0; height:14vh; background:linear-gradient(to top,#121412,transparent); z-index:2; pointer-events:none;"></div>
       </div>
+    </section>
 
-      <!-- Stats -->
-      <div id="stats-grid" class="grid grid-cols-2 md:grid-cols-5 gap-8 p-10 md:p-20 border-t border-white/5 text-center">
-        <div class="flex flex-col gap-1.5"><span class="text-3xl font-light" style="font-family:'Noto Serif',serif"><span class="counter" data-target="50" data-suffix="+">0</span></span><span class="text-label-sm text-outline uppercase tracking-wider">Speakers</span></div>
-        <div class="flex flex-col gap-1.5"><span class="text-3xl font-light" style="font-family:'Noto Serif',serif"><span class="counter" data-target="300" data-suffix="+">0</span></span><span class="text-label-sm text-outline uppercase tracking-wider">Asistentes</span></div>
-        <div class="flex flex-col gap-1.5"><span class="text-3xl font-light" style="font-family:'Noto Serif',serif"><span class="counter" data-target="4" data-suffix="">0</span></span><span class="text-label-sm text-outline uppercase tracking-wider">Hacker Houses</span></div>
-        <div class="flex flex-col gap-1.5"><span class="text-3xl font-light" style="font-family:'Noto Serif',serif"><span class="counter" data-target="7" data-suffix="">0</span></span><span class="text-label-sm text-outline uppercase tracking-wider">Días</span></div>
-        <div class="flex flex-col gap-1.5 col-span-2 md:col-span-1"><span class="text-3xl font-light" style="font-family:'Noto Serif',serif">Nov '25</span><span class="text-label-sm text-outline uppercase tracking-wider">Fecha</span></div>
-      </div>
-
-    </div><!-- /sede -->
-
-    <!-- ══ MAIN GLASS ══ -->
+    <!-- ══ GLASS CONTAINER (todo el contenido de secciones 3–8) ══ -->
     <div class="relative z-20 w-[95%] mx-auto glass-panel mb-24 overflow-hidden"
-         style="border-bottom:1px solid rgba(255,255,255,0.05); border-radius:0 0 3rem 3rem;">
+         style="border:1px solid rgba(255,255,255,0.05); border-radius:3rem;">
       <div class="divide-y divide-white/5">
 
-        <!-- ── TEMÁTICAS (video backgrounds) ── -->
+        <!-- ── 3. FOCO / TEMÁTICAS ── -->
         <section class="p-10 md:p-20" id="foco">
           <div class="mb-12">
             <span class="text-primary font-label-sm uppercase tracking-[0.3em] mb-3 block">Foco</span>
@@ -269,45 +233,74 @@
           </div>
         </section>
 
-        <!-- ── HACKER HOUSES ── -->
-        <section class="p-10 md:p-20" id="hacker-houses">
-          <div class="grid md:grid-cols-2 gap-16 items-center">
+        <!-- ── 4. CIFRAS ── -->
+        <section id="stats-section" class="p-10 md:p-20">
+          <div class="mb-12">
+            <span class="text-primary font-label-sm uppercase tracking-[0.3em] mb-3 block">El Evento</span>
+            <h2 class="font-headline-lg text-[clamp(2rem,4vw,3rem)]">En números</h2>
+          </div>
+          <div id="stats-grid" class="grid grid-cols-2 md:grid-cols-5 gap-10 text-center">
+            <div class="flex flex-col gap-2">
+              <span class="text-5xl font-light" style="font-family:'Noto Serif',serif"><span class="counter" data-target="50" data-suffix="+">0</span></span>
+              <span class="text-label-sm text-outline uppercase tracking-wider">Speakers</span>
+            </div>
+            <div class="flex flex-col gap-2">
+              <span class="text-5xl font-light" style="font-family:'Noto Serif',serif"><span class="counter" data-target="300" data-suffix="+">0</span></span>
+              <span class="text-label-sm text-outline uppercase tracking-wider">Asistentes</span>
+            </div>
+            <div class="flex flex-col gap-2">
+              <span class="text-5xl font-light" style="font-family:'Noto Serif',serif"><span class="counter" data-target="4" data-suffix="">0</span></span>
+              <span class="text-label-sm text-outline uppercase tracking-wider">Hacker Houses</span>
+            </div>
+            <div class="flex flex-col gap-2">
+              <span class="text-5xl font-light" style="font-family:'Noto Serif',serif"><span class="counter" data-target="7" data-suffix="">0</span></span>
+              <span class="text-label-sm text-outline uppercase tracking-wider">Días</span>
+            </div>
+            <div class="flex flex-col gap-2 col-span-2 md:col-span-1">
+              <span class="text-5xl font-light" style="font-family:'Noto Serif',serif">Nov<br><span style="font-size:2.5rem">'25</span></span>
+              <span class="text-label-sm text-outline uppercase tracking-wider">Fecha</span>
+            </div>
+          </div>
+        </section>
 
-            <div class="space-y-6">
-              <span class="text-primary font-label-sm uppercase tracking-[0.3em] block">Hacker Houses</span>
-              <h2 class="font-headline-lg text-[clamp(2rem,4vw,3rem)] leading-tight">Code &amp; Nature.</h2>
-              <p class="font-body-lg text-on-surface-variant">Siete días de co-living técnico en refugios exclusivos de alta montaña.</p>
-              <ul class="space-y-3 pt-2">
-                <li class="flex items-start gap-3 text-sm text-on-surface-variant"><span class="w-1.5 h-1.5 bg-primary rounded-full mt-1.5 flex-shrink-0"></span>4 casas, 8–12 personas por casa</li>
-                <li class="flex items-start gap-3 text-sm text-on-surface-variant"><span class="w-1.5 h-1.5 bg-primary rounded-full mt-1.5 flex-shrink-0"></span>Wi-Fi satelital de alta velocidad</li>
-                <li class="flex items-start gap-3 text-sm text-on-surface-variant"><span class="w-1.5 h-1.5 bg-primary rounded-full mt-1.5 flex-shrink-0"></span>Catering, espacios de trabajo y descanso</li>
-                <li class="flex items-start gap-3 text-sm text-on-surface-variant"><span class="w-1.5 h-1.5 bg-primary rounded-full mt-1.5 flex-shrink-0"></span>Acceso exclusivo a actividades outdoor</li>
-              </ul>
-              <a href="#registro" class="inline-flex items-center gap-2 liquid-glass px-8 py-3.5 rounded-full border border-white/25 text-sm font-semibold hover:bg-white/10 transition-all">
-                Postularse <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
-              </a>
+        <!-- ── 5. SEDE ── -->
+        <section id="venue" class="p-10 md:p-20">
+          <div class="flex flex-col md:flex-row items-center gap-10 md:gap-16">
+
+            <!-- Texto SMA -->
+            <div class="flex-shrink-0 max-w-sm space-y-5">
+              <span class="vanish-item text-primary font-label-sm uppercase tracking-[0.3em] block">Sede</span>
+              <h2 class="vanish-item font-headline-lg text-[clamp(2rem,4vw,3.2rem)] leading-tight" style="animation-delay:80ms">San Martín<br>de los Andes</h2>
+              <p class="vanish-item font-body-lg text-on-surface-variant" style="animation-delay:160ms">Donde la precisión técnica encuentra la calma radical del bosque.</p>
+              <p class="vanish-item text-sm text-outline" style="animation-delay:240ms">Neuquén, Patagonia Argentina · Nov 2025</p>
+              <p class="vanish-item text-xs text-outline/60 flex items-center gap-1.5 pt-2" style="animation-delay:320ms">
+                <span class="material-symbols-outlined text-[14px]">touch_app</span>
+                Tocá las imágenes para explorar
+              </p>
             </div>
 
-            <div class="flex justify-center md:justify-end">
-              <div id="hh-stack" class="relative" style="width:400px; height:310px;">
-
-                <div class="click-card" style="z-index:1; transform:rotate(-4deg) translate(-14px, 12px);">
-                  <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBI1OF5hn7pplzyG977-FEjCBSdk87ztdgMIzHjTmcaYiHXWA1myxzdA1uxAsfx9XUTq0RUtlwyYO40LetE2BB8RVuMzw80Hk39KTCk-rHtrIBfiqPObdJyMPSVOT3-ycazpIZs7HxqAbH59qfGoRIiGB70tU62XrVKRydIrK_eHfpt3EeqRD9OMfv8uP9df0wWinAgWxehmhFMATdcS83WptWaboJ9qOqkBs6lG6W9yA881N9fr6_Kf9yuod1_Pfy2qzb6U9j9Dzrc" alt="">
+            <!-- Pila de tarjetas -->
+            <div class="flex-1 flex justify-center md:justify-end">
+              <div id="sede-stack" class="relative" style="width:400px; height:310px;">
+                <div class="click-card" style="z-index:1; transform:rotate(-5deg) translate(-16px, 14px);">
+                  <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtgBBlD5dDy-ar3b5AoWQqiipCGNK_Hx02OinD9xJu_9i7hEaoBYAxcBNGUrpCzH0efXHojqI7khKEvTXcDJhDAH_Ht2P3qB-zAGHLUav1KIQyr3DrobppEeJR6rpDGebUnVjqVts6Mrlbrpk3P-KB6WuA1x-PiXNLMCSI-49I7WpK6R5amGgtDJfjxt7WRfbuEJq-4WExYEUBwUCohoVwPTpP1DlEI9NJ9XBVKPhvjtqdtiZdm8x9vMGau_OCe5jQ_9uAszXHxb-b" alt="Vista SMA">
                 </div>
-                <div class="click-card" style="z-index:2; transform:rotate(3deg) translate(10px, 3px);">
-                  <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBO1TCAWx-faUrpfxbcTtfB_oANPhzF6Rxh_svaPzd4gP-yxo1GyDGd155hoJhA6L5n9q2_nSIc6K2C1iSN-tXGz0d1WcrIORRr2DwuUBOV8T6fnGbCmWubem5SssUd4YWe-cFXYYy5I1MMdvbELgr0gDIOUOyRGrnOTqbcW_i2FdljRPvoqnhvoOnArDO5rN9kThXRxTJzn-0yiQaEn_DgBXyOFJ3FkU2ZkRISZOaRETF8vpRjc-AfqK8zsZ6U0WidadDHKoBF9_6J" alt="">
+                <div class="click-card" style="z-index:2; transform:rotate(3deg) translate(12px, 4px);">
+                  <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBO1TCAWx-faUrpfxbcTtfB_oANPhzF6Rxh_svaPzd4gP-yxo1GyDGd155hoJhA6L5n9q2_nSIc6K2C1iSN-tXGz0d1WcrIORRr2DwuUBOV8T6fnGbCmWubem5SssUd4YWe-cFXYYy5I1MMdvbELgr0gDIOUOyRGrnOTqbcW_i2FdljRPvoqnhvoOnArDO5rN9kThXRxTJzn-0yiQaEn_DgBXyOFJ3FkU2ZkRISZOaRETF8vpRjc-AfqK8zsZ6U0WidadDHKoBF9_6J" alt="Lago Lácar">
                 </div>
-                <div class="click-card top-card" style="z-index:3; transform:rotate(-1.5deg) translate(-4px, -12px);">
-                  <img src="san-martin.jpg" alt="">
+                <div class="click-card" style="z-index:3; transform:rotate(-2deg) translate(-6px, -8px);">
+                  <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBI1OF5hn7pplzyG977-FEjCBSdk87ztdgMIzHjTmcaYiHXWA1myxzdA1uxAsfx9XUTq0RUtlwyYO40LetE2BB8RVuMzw80Hk39KTCk-rHtrIBfiqPObdJyMPSVOT3-ycazpIZs7HxqAbH59qfGoRIiGB70tU62XrVKRydIrK_eHfpt3EeqRD9OMfv8uP9df0wWinAgWxehmhFMATdcS83WptWaboJ9qOqkBs6lG6W9yA881N9fr6_Kf9yuod1_Pfy2qzb6U9j9Dzrc" alt="Bosque">
                 </div>
-
+                <div class="click-card top-card" style="z-index:4; transform:rotate(1.5deg) translate(6px, -22px);">
+                  <img src="san-martin.jpg" alt="San Martín de los Andes">
+                </div>
               </div>
             </div>
 
           </div>
         </section>
 
-        <!-- ── ACTIVIDADES ── -->
+        <!-- ── 6. ACTIVIDADES ── -->
         <section class="p-10 md:p-20" id="activities">
           <div class="mb-12">
             <span class="text-primary font-label-sm uppercase tracking-[0.3em] mb-3 block">Experiencias</span>
@@ -350,7 +343,7 @@
               <div class="strip-overlay"></div>
               <div class="strip-content">
                 <span class="strip-num">04</span><span class="strip-title">Hackatón Outdoor</span>
-                <p class="strip-desc">48hs de construcción intensiva. Equipos de 4, premios en efectivo.</p>
+                <p class="strip-desc">48hs de construcción intensiva. Premios en efectivo.</p>
                 <span class="strip-cta">Ver más <span class="material-symbols-outlined text-[13px]">arrow_forward</span></span>
               </div>
             </div>
@@ -368,7 +361,18 @@
           </div>
         </section>
 
-        <!-- ── REGISTRO ── -->
+        <!-- ── 7. PARTNERS ── -->
+        <section class="py-20 text-center px-10" id="partners">
+          <h2 class="font-label-sm uppercase tracking-[0.5em] mb-12 opacity-30">Partners</h2>
+          <div class="flex flex-wrap justify-center gap-12 grayscale opacity-30">
+            <span class="text-lg font-bold tracking-tighter">TECHCORP</span>
+            <span class="text-lg font-bold tracking-tighter">ANDESVENTURES</span>
+            <span class="text-lg font-bold tracking-tighter">SILICONMOUNTAIN</span>
+            <span class="text-lg font-bold tracking-tighter">NEUQUÉNLABS</span>
+          </div>
+        </section>
+
+        <!-- ── 8. REGISTRO ── -->
         <section class="p-10 md:p-20 text-center" id="registro">
           <span class="text-primary font-label-sm uppercase tracking-[0.3em] mb-4 block">Registro</span>
           <h2 class="font-headline-lg text-[clamp(2rem,4vw,3rem)] mb-4">Asegurar lugar</h2>
@@ -380,19 +384,8 @@
           <p id="registro-msg" class="mt-4 text-sm text-primary opacity-0 transition-opacity" aria-live="polite"></p>
         </section>
 
-        <!-- ── PARTNERS ── -->
-        <section class="py-16 text-center px-10">
-          <h2 class="font-label-sm uppercase tracking-[0.5em] mb-10 opacity-30">Partners</h2>
-          <div class="flex flex-wrap justify-center gap-10 grayscale opacity-30">
-            <span class="text-lg font-bold tracking-tighter">TECHCORP</span>
-            <span class="text-lg font-bold tracking-tighter">ANDESVENTURES</span>
-            <span class="text-lg font-bold tracking-tighter">SILICONMOUNTAIN</span>
-            <span class="text-lg font-bold tracking-tighter">NEUQUÉNLABS</span>
-          </div>
-        </section>
-
       </div>
-    </div><!-- /main glass -->
+    </div><!-- /glass -->
 
   </main>
 
@@ -429,8 +422,8 @@
         var e = easeOut(p);
         card.style.width        = lerp(30, 100, e) + 'vw';
         card.style.height       = lerp(58, 100, e) + 'vh';
-        card.style.borderRadius = lerp(32, 0,   e) + 'px';
-        text.style.opacity = Math.min(1, Math.max(0, (p - 0.45) / 0.55));
+        card.style.borderRadius = lerp(32, 0, e) + 'px';
+        text.style.opacity      = Math.min(1, Math.max(0, (p - 0.45) / 0.55));
         if (p >= 0.98) header.classList.add('visible');
         else           header.classList.remove('visible');
         raf = null;
@@ -439,7 +432,57 @@
       update();
     })();
 
-    // ── 2. Click-to-dismiss card stacks ──
+    // ── 2. Text reveal ──
+    (function () {
+      var section = document.getElementById('text-reveal-section');
+      var container = document.getElementById('reveal-text');
+
+      // The full text to reveal, broken into "chunks" for visual rhythm
+      var chunks = [
+        'Patagonia Tech Week', 'será', 'el evento', 'más importante',
+        'de tecnología', 'de Sudamérica,', 'donde confluirá',
+        'el talento regional', 'de más alto nivel.', ' ',
+        'Hecho', 'por nosotros', 'y para nosotros.'
+      ];
+
+      // Build spans
+      var spans = chunks.map(function (chunk) {
+        var sp = document.createElement('span');
+        sp.className = 'reveal-word';
+        sp.textContent = chunk === ' ' ? ' ' : chunk;
+        if (chunk !== ' ') sp.style.marginRight = '0.35em';
+        container.appendChild(sp);
+        return sp;
+      });
+
+      var N   = spans.length;
+      var raf = null;
+
+      function easeInOut(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+
+      function update() {
+        var rect     = section.getBoundingClientRect();
+        var scrolled = -rect.top;                              // px scrolled into section
+        var range    = section.offsetHeight - window.innerHeight; // total scrollable range
+        var prog     = Math.max(0, Math.min(1, scrolled / range));
+
+        spans.forEach(function (sp, i) {
+          // Each word occupies a window: [i/N … (i+1)/N] of total progress
+          // But we spread the leading edge so first word starts at 0 and last at 0.85
+          var wordStart = (i / N) * 0.85;
+          var wordEnd   = wordStart + 0.18;
+          var t = Math.max(0, Math.min(1, (prog - wordStart) / (wordEnd - wordStart)));
+          sp.style.opacity = 0.1 + easeInOut(t) * 0.9;
+        });
+
+        raf = null;
+      }
+
+      window.addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
+      update();
+    })();
+
+    // ── 3. Click-to-dismiss card stacks ──
     function initClickStack(stackId) {
       var stack = document.getElementById(stackId);
       if (!stack) return;
@@ -468,9 +511,8 @@
       setTop(topIdx);
     }
     initClickStack('sede-stack');
-    initClickStack('hh-stack');
 
-    // ── 3. Vanish ──
+    // ── 4. Vanish ──
     (function () {
       var obs = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
@@ -484,7 +526,7 @@
       document.querySelectorAll('.vanish-item').forEach(function (el) { obs.observe(el); });
     })();
 
-    // ── 4. Counters ──
+    // ── 5. Counters (2500ms ease-out-quart) ──
     (function () {
       var fired = false;
       function run(el) {
@@ -504,7 +546,7 @@
       if (g) obs.observe(g);
     })();
 
-    // ── 5. Smooth scroll ──
+    // ── 6. Smooth scroll ──
     document.querySelectorAll('a[href^="#"]').forEach(function (a) {
       a.addEventListener('click', function (e) {
         var t = document.querySelector(a.getAttribute('href'));
@@ -512,7 +554,7 @@
       });
     });
 
-    // ── 6. Registro ──
+    // ── 7. Registro ──
     function handleRegistro(e) {
       e.preventDefault();
       var msg = document.getElementById('registro-msg');
