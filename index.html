@@ -141,9 +141,9 @@
 
   <!-- ── Header ── -->
   <header id="site-header" class="fixed top-0 right-0 z-50 px-8 h-16 flex items-center gap-8">
-    <a href="#foco"           class="text-on-surface/60 text-sm font-medium tracking-wide hover:text-primary transition-colors">El Evento</a>
-    <a href="#footer-contact" class="text-on-surface/60 text-sm font-medium tracking-wide hover:text-primary transition-colors">Contacto</a>
-    <a href="#registro"       class="liquid-glass px-5 py-2 rounded-full text-sm font-semibold border border-white/20 hover:bg-white/10 transition-all">Aplicar</a>
+    <a href="#foco"           class="text-sm font-medium tracking-wide transition-colors" style="color:#111;">El Evento</a>
+    <a href="#footer-contact" class="text-sm font-medium tracking-wide transition-colors" style="color:#111;">Contacto</a>
+    <a href="#registro"       class="px-5 py-2 rounded-full text-sm font-semibold border transition-all" style="color:#111; border-color:rgba(0,0,0,0.25); background:rgba(255,255,255,0.15);">Aplicar</a>
   </header>
 
   <main>
@@ -156,10 +156,20 @@
           <!-- Base image -->
           <img src="san-martin.jpg" alt="San Martín de los Andes" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;" loading="eager">
 
-          <!-- PATAGONIA + TECH WEEK — previous version -->
+          <!-- Overlay negro 10% -->
+          <div style="position:absolute; inset:0; background:rgba(0,0,0,0.10); z-index:2; pointer-events:none;"></div>
+
+          <!-- PATAGONIA + TECH WEEK + CTA -->
           <div id="hero-text" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; opacity:0; pointer-events:none; user-select:none; z-index:5;">
             <span style="font-family:'Open Sans',sans-serif; font-size:clamp(13px,1.7vw,24px); font-weight:700; color:#ffffff; letter-spacing:0.4em; text-transform:uppercase; margin-bottom:0.45em; white-space:nowrap;">Tech Week</span>
             <span style="font-family:'Hanken Grotesk',sans-serif; font-size:clamp(52px,11vw,170px); font-weight:700; color:rgba(255,255,255,1); letter-spacing:0.04em; line-height:1; white-space:nowrap; text-transform:uppercase;">PATAGONIA</span>
+            <!-- CTA Aplicar -->
+            <a href="#registro" style="margin-top:2em; padding:0.6em 2.4em; border-radius:9999px; border:1.5px solid rgba(255,255,255,0.85); color:#fff; font-family:'Hanken Grotesk',sans-serif; font-size:clamp(12px,1.1vw,17px); font-weight:600; letter-spacing:0.18em; text-transform:uppercase; text-decoration:none; background:rgba(255,255,255,0.12); backdrop-filter:blur(8px); transition:background 0.2s ease, border-color 0.2s ease; pointer-events:auto;">Aplicar</a>
+          </div>
+
+          <!-- Agosto 2026 — bottom right -->
+          <div id="hero-date" style="position:absolute; bottom:5%; right:5%; opacity:0; pointer-events:none; user-select:none; z-index:9;">
+            <span style="font-family:'Open Sans',sans-serif; font-size:clamp(10px,0.85vw,13px); font-weight:400; color:rgba(255,255,255,0.70); letter-spacing:0.14em; text-transform:uppercase;">Agosto 2026</span>
           </div>
 
           <!-- Scroll hint button (separately positioned at the bottom) -->
@@ -450,6 +460,7 @@
       var card   = document.getElementById('hero-card');
       var text   = document.getElementById('hero-text');
       var btn    = document.getElementById('hero-scroll-btn');
+      var date   = document.getElementById('hero-date');
       var header = document.getElementById('site-header');
       var raf    = null;
       function lerp(a, b, t) { return a + (b - a) * t; }
@@ -461,7 +472,8 @@
         card.style.height       = lerp(58, 100, e) + 'vh';
         card.style.borderRadius = lerp(32, 0, e) + 'px';
         text.style.opacity      = Math.max(0, Math.min(1, (p - 0.45) / 0.55));
-        if (btn) btn.style.opacity = Math.max(0, Math.min(1, (p - 0.45) / 0.55));
+        if (btn)  btn.style.opacity  = Math.max(0, Math.min(1, (p - 0.45) / 0.55));
+        if (date) date.style.opacity = Math.max(0, Math.min(1, (p - 0.45) / 0.55));
         if (p >= 0.98) header.classList.add('visible');
         else           header.classList.remove('visible');
         raf = null;
