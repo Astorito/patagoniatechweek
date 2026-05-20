@@ -143,16 +143,16 @@
           <!-- Base image -->
           <img src="san-martin.jpg" alt="San Martín de los Andes" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;" loading="eager">
 
-          <!-- PATAGONIA + TECH WEEK — top:30% so text sits at center-upper, baseline at treeline -->
-          <div id="hero-text" style="position:absolute; left:0; right:0; top:30%; padding:0 3.5%; display:flex; flex-direction:column; opacity:0; pointer-events:none; user-select:none; z-index:5;">
-            <span style="font-family:'Hanken Grotesk',sans-serif; font-size:clamp(64px,14.5vw,230px); font-weight:700; color:rgba(255,255,255,0.80); letter-spacing:0.01em; line-height:0.92; white-space:nowrap; text-transform:uppercase; display:block;">PATAGONIA</span>
-            <span style="font-family:'Open Sans',sans-serif; font-size:clamp(12px,1.8vw,26px); font-weight:400; color:rgba(255,255,255,0.75); letter-spacing:0.18em; text-transform:uppercase; display:block; text-align:right; margin-top:0.2em;">Tech Week</span>
+          <!-- PATAGONIA + TECH WEEK — centered, top:28%, baseline sits at treeline -->
+          <div id="hero-text" style="position:absolute; left:50%; top:28%; transform:translateX(-50%); width:93%; display:flex; flex-direction:column; align-items:center; opacity:0; pointer-events:none; user-select:none; z-index:5;">
+            <span style="font-family:'Hanken Grotesk',sans-serif; font-size:clamp(64px,14.5vw,230px); font-weight:700; color:rgba(255,255,255,0.80); letter-spacing:0.01em; line-height:0.92; white-space:nowrap; text-transform:uppercase; display:block; text-align:center; width:100%;">PATAGONIA</span>
+            <span style="font-family:'Open Sans',sans-serif; font-size:clamp(12px,1.8vw,26px); font-weight:400; color:rgba(255,255,255,0.75); letter-spacing:0.18em; text-transform:uppercase; display:block; text-align:right; width:100%; margin-top:0.2em;">Tech Week</span>
           </div>
 
-          <!-- Foreground layer: trees appear in front of the bottom of PATAGONIA -->
+          <!-- Foreground layer: trees cover bottom ~30% of PATAGONIA letters -->
           <img src="san-martin.jpg" aria-hidden="true" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:8; pointer-events:none;
-            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 44%, rgba(0,0,0,0.4) 52%, black 60%, black 100%);
-            mask-image:         linear-gradient(to bottom, transparent 0%, transparent 44%, rgba(0,0,0,0.4) 52%, black 60%, black 100%);">
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 36%, rgba(0,0,0,0.35) 44%, rgba(0,0,0,0.75) 52%, black 60%, black 100%);
+            mask-image:         linear-gradient(to bottom, transparent 0%, transparent 36%, rgba(0,0,0,0.35) 44%, rgba(0,0,0,0.75) 52%, black 60%, black 100%);">
         </div>
 
         <div style="position:absolute; bottom:0; left:0; right:0; height:28%; background:linear-gradient(to bottom,transparent,#060608); z-index:15; pointer-events:none;"></div>
