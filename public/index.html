@@ -140,10 +140,12 @@
 <body class="text-on-surface font-body-md selection:bg-primary/30 selection:text-on-surface overflow-x-hidden">
 
   <!-- ── Header ── -->
-  <header id="site-header" class="fixed top-0 right-0 z-50 px-8 h-16 flex items-center gap-8">
-    <a href="#foco"           class="text-sm font-medium tracking-wide transition-colors" style="color:#111;">El Evento</a>
-    <a href="#footer-contact" class="text-sm font-medium tracking-wide transition-colors" style="color:#111;">Contacto</a>
-    <a href="#registro"       class="px-5 py-2 rounded-full text-sm font-semibold border transition-all" style="color:#111; border-color:rgba(0,0,0,0.25); background:rgba(255,255,255,0.15);">Aplicar</a>
+  <header id="site-header" class="fixed z-50" style="top:14px; right:16px;">
+    <div style="background:rgba(255,255,255,0.22); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); border:1px solid rgba(255,255,255,0.45); border-radius:9999px; padding:0.45rem 1.1rem; display:flex; align-items:center; gap:1.5rem;">
+      <a href="#foco"           class="text-sm font-medium tracking-wide transition-colors" style="color:#111;">El Evento</a>
+      <a href="#footer-contact" class="text-sm font-medium tracking-wide transition-colors" style="color:#111;">Contacto</a>
+      <a href="#registro"       class="px-4 py-1.5 rounded-full text-sm font-semibold border transition-all" style="color:#111; border-color:rgba(0,0,0,0.20); background:rgba(255,255,255,0.35);">Aplicar</a>
+    </div>
   </header>
 
   <main>
@@ -162,14 +164,14 @@
           <!-- PATAGONIA + TECH WEEK + CTA -->
           <div id="hero-text" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; opacity:0; pointer-events:none; user-select:none; z-index:5;">
             <span style="font-family:'Open Sans',sans-serif; font-size:clamp(13px,1.7vw,24px); font-weight:700; color:#ffffff; letter-spacing:0.4em; text-transform:uppercase; margin-bottom:0.45em; white-space:nowrap;">Tech Week</span>
-            <span style="font-family:'Hanken Grotesk',sans-serif; font-size:clamp(52px,11vw,170px); font-weight:700; color:rgba(255,255,255,1); letter-spacing:0.04em; line-height:1; white-space:nowrap; text-transform:uppercase;">PATAGONIA</span>
+            <span style="font-family:'Hanken Grotesk',sans-serif; font-size:clamp(48px,10.1vw,156px); font-weight:700; color:rgba(255,255,255,1); letter-spacing:0.04em; line-height:1; white-space:nowrap; text-transform:uppercase;">PATAGONIA</span>
             <!-- CTA Aplicar -->
             <a href="#registro" style="margin-top:2em; padding:0.6em 2.4em; border-radius:9999px; border:1.5px solid rgba(255,255,255,0.85); color:#fff; font-family:'Hanken Grotesk',sans-serif; font-size:clamp(12px,1.1vw,17px); font-weight:600; letter-spacing:0.18em; text-transform:uppercase; text-decoration:none; background:rgba(255,255,255,0.12); backdrop-filter:blur(8px); transition:background 0.2s ease, border-color 0.2s ease; pointer-events:auto;">Aplicar</a>
           </div>
 
           <!-- Agosto 2026 — bottom right -->
           <div id="hero-date" style="position:absolute; bottom:5%; right:5%; opacity:0; pointer-events:none; user-select:none; z-index:9;">
-            <span style="font-family:'Open Sans',sans-serif; font-size:clamp(10px,0.85vw,13px); font-weight:400; color:rgba(255,255,255,0.70); letter-spacing:0.14em; text-transform:uppercase;">Agosto 2026</span>
+            <span style="font-family:'Open Sans',sans-serif; font-size:clamp(10px,0.85vw,13px); font-weight:400; color:rgba(255,255,255,0.92); letter-spacing:0.14em; text-transform:uppercase;">Agosto 2026</span>
           </div>
 
           <!-- Scroll hint button (separately positioned at the bottom) -->
