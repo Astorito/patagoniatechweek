@@ -40,12 +40,13 @@
   </script>
 
   <style>
-    /* ── Dot-grid texture background ── */
+    /* ── Dot-grid texture background (matches the dark embossed dot image) ── */
     body {
-      background-color: #060608;
+      background-color: #030508;
       background-image:
-        radial-gradient(circle, rgba(90,95,115,0.45) 1.3px, transparent 1.3px);
-      background-size: 11px 11px;
+        radial-gradient(ellipse 55% 65% at 68% 38%, rgba(48,62,90,0.78) 0%, transparent 62%),
+        radial-gradient(circle, rgba(72,82,108,0.55) 1.2px, transparent 1.2px);
+      background-size: 100% 100%, 9px 9px;
       background-attachment: fixed;
     }
 
@@ -55,11 +56,11 @@
       border: 1px solid rgba(255,255,255,0.10);
     }
     .glass-panel {
-      background: rgba(8,9,12,0.45);
+      background: rgba(5,7,12,0.28);
       backdrop-filter: blur(48px); -webkit-backdrop-filter: blur(48px);
       border-left: 1px solid rgba(255,255,255,0.07);
       border-right: 1px solid rgba(255,255,255,0.07);
-      box-shadow: 0 8px 48px rgba(0,0,0,0.5);
+      box-shadow: 0 8px 48px rgba(0,0,0,0.35);
     }
     .material-symbols-outlined { font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 24; }
 
@@ -164,7 +165,7 @@
 
         <div style="max-width:92%; width:100%; text-align:left; padding:0 4%; z-index:1;">
           <p id="reveal-text"
-             style="font-family:'Hanken Grotesk',sans-serif; font-size:clamp(1.75rem,3.8vw,3.5rem); font-weight:600; line-height:1.6; letter-spacing:-0.01em; word-break:break-word;">
+             style="font-family:'Hanken Grotesk',sans-serif; font-size:clamp(2.1rem,4.8vw,5rem); font-weight:600; line-height:1.45; letter-spacing:-0.02em; overflow-wrap:normal; word-break:normal;">
             <!-- Each word is wrapped in a span by JS — see initTextReveal() -->
           </p>
         </div>
@@ -432,7 +433,7 @@
         card.style.width        = lerp(30, 100, e) + 'vw';
         card.style.height       = lerp(58, 100, e) + 'vh';
         card.style.borderRadius = lerp(32, 0, e) + 'px';
-        text.style.opacity      = Math.min(1, Math.max(0, (p - 0.45) / 0.55));
+        text.style.opacity      = Math.min(1, 0.35 + Math.max(0, (p - 0.1) / 0.9) * 0.65);
         if (p >= 0.98) header.classList.add('visible');
         else           header.classList.remove('visible');
         raf = null;
@@ -448,18 +449,24 @@
 
       // The full text to reveal, broken into "chunks" for visual rhythm
       var chunks = [
-        'Patagonia Tech Week', 'será', 'el evento', 'más importante',
-        'de tecnología', 'de Sudamérica,', 'donde confluirá',
-        'el talento regional', 'de más alto nivel.', ' ',
-        'Hecho', 'por nosotros', 'y para nosotros.'
+        'Patagonia Tech Week', 'será', 'el evento', 'más importante',
+        'de tecnología', 'de Sudamérica,', 'donde confluirá',
+        'el talento regional', 'de más alto nivel', 'generando un foco',
+        'de innovación.', '—', 'Hecho por', '§nosotros', 'y para', '§nosotros.'
       ];
 
-      // Build spans
+      // Build spans — trailing space prevents words running together
       var spans = chunks.map(function (chunk) {
         var sp = document.createElement('span');
         sp.className = 'reveal-word';
-        sp.textContent = chunk === ' ' ? ' ' : chunk;
-        if (chunk !== ' ') sp.style.marginRight = '0.35em';
+        var isUnder = chunk.charAt(0) === '§';
+        var text = isUnder ? chunk.slice(1) : chunk;
+        sp.textContent = text + ' ';
+        if (isUnder) {
+          sp.style.textDecoration = 'underline';
+          sp.style.textDecorationThickness = '2px';
+          sp.style.textUnderlineOffset = '0.18em';
+        }
         container.appendChild(sp);
         return sp;
       });
