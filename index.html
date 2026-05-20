@@ -40,14 +40,16 @@
   </script>
 
   <style>
-    /* ── Dot-grid texture background (matches the dark embossed dot image) ── */
+    /* ── Wavy dark texture background ── */
     body {
-      background-color: #030508;
+      background-color: #050608;
       background-image:
-        radial-gradient(ellipse 55% 65% at 68% 38%, rgba(48,62,90,0.78) 0%, transparent 62%),
-        radial-gradient(circle, rgba(72,82,108,0.55) 1.2px, transparent 1.2px);
-      background-size: 100% 100%, 9px 9px;
-      background-attachment: fixed;
+        linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),
+        url('bg-waves.png');
+      background-size: cover, cover;
+      background-position: center, center;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed, fixed;
     }
 
     .liquid-glass {
@@ -55,9 +57,13 @@
       backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
       border: 1px solid rgba(255,255,255,0.10);
     }
+    :root {
+      --glass-bg: rgba(5,7,12,0.15);
+      --glass-blur: 48px;
+    }
     .glass-panel {
-      background: rgba(5,7,12,0.28);
-      backdrop-filter: blur(48px); -webkit-backdrop-filter: blur(48px);
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur));
       border-left: 1px solid rgba(255,255,255,0.07);
       border-right: 1px solid rgba(255,255,255,0.07);
       box-shadow: 0 8px 48px rgba(0,0,0,0.35);
@@ -75,6 +81,13 @@
     }
     .vanish-item { opacity:0; }
     .vanish-item.revealed { animation: vanishIn 0.7s cubic-bezier(0.22,1,0.36,1) forwards; }
+
+    /* ── Scroll hint button ── */
+    @keyframes scrollHint {
+      0%, 100% { transform: translateY(0); opacity: 0.85; }
+      50%      { transform: translateY(4px); opacity: 1; }
+    }
+    #hero-scroll-btn:hover { border-color: rgba(255,255,255,0.95) !important; transform: translateX(-50%) scale(1.06) !important; }
 
     /* ── Text reveal words ── */
     .reveal-word {
@@ -143,16 +156,22 @@
           <!-- Base image -->
           <img src="san-martin.jpg" alt="San Martín de los Andes" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;" loading="eager">
 
-          <!-- PATAGONIA + TECH WEEK — centered, top:28%, baseline sits at treeline -->
-          <div id="hero-text" style="position:absolute; left:50%; top:28%; transform:translateX(-50%); width:93%; display:flex; flex-direction:column; align-items:center; opacity:0; pointer-events:none; user-select:none; z-index:5;">
-            <span style="font-family:'Hanken Grotesk',sans-serif; font-size:clamp(64px,14.5vw,230px); font-weight:700; color:rgba(255,255,255,0.80); letter-spacing:0.01em; line-height:0.92; white-space:nowrap; text-transform:uppercase; display:block; text-align:center; width:100%;">PATAGONIA</span>
-            <span style="font-family:'Open Sans',sans-serif; font-size:clamp(12px,1.8vw,26px); font-weight:400; color:rgba(255,255,255,0.75); letter-spacing:0.18em; text-transform:uppercase; display:block; text-align:right; width:100%; margin-top:0.2em;">Tech Week</span>
+          <!-- PATAGONIA + TECH WEEK — previous version -->
+          <div id="hero-text" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; opacity:0; pointer-events:none; user-select:none; z-index:5;">
+            <span style="font-family:'Open Sans',sans-serif; font-size:clamp(13px,1.7vw,24px); font-weight:700; color:#ffffff; letter-spacing:0.4em; text-transform:uppercase; margin-bottom:0.45em; white-space:nowrap;">Tech Week</span>
+            <span style="font-family:'Hanken Grotesk',sans-serif; font-size:clamp(52px,11vw,170px); font-weight:700; color:rgba(255,255,255,0.95); letter-spacing:0.04em; line-height:1; white-space:nowrap; text-transform:uppercase;">PATAGONIA</span>
           </div>
+
+          <!-- Scroll hint button (separately positioned at the bottom) -->
+          <button type="button" id="hero-scroll-btn" aria-label="Scroll abajo"
+            style="position:absolute; left:50%; bottom:6%; transform:translateX(-50%); width:46px; height:46px; border-radius:9999px; border:1.5px solid rgba(255,255,255,0.55); background:transparent; color:#ffffff; display:flex; align-items:center; justify-content:center; cursor:pointer; opacity:0; z-index:10; transition:border-color 0.25s ease, transform 0.25s ease;">
+            <span class="material-symbols-outlined" style="font-size:24px; animation:scrollHint 1.8s ease-in-out infinite;">expand_more</span>
+          </button>
 
           <!-- Foreground layer: trees cover bottom ~30% of PATAGONIA letters -->
           <img src="san-martin.jpg" aria-hidden="true" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:8; pointer-events:none;
-            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 36%, rgba(0,0,0,0.35) 44%, rgba(0,0,0,0.75) 52%, black 60%, black 100%);
-            mask-image:         linear-gradient(to bottom, transparent 0%, transparent 36%, rgba(0,0,0,0.35) 44%, rgba(0,0,0,0.75) 52%, black 60%, black 100%);">
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 44%, rgba(0,0,0,0.35) 52%, black 62%, black 100%);
+            mask-image:         linear-gradient(to bottom, transparent 0%, transparent 44%, rgba(0,0,0,0.35) 52%, black 62%, black 100%);">
         </div>
 
         <div style="position:absolute; bottom:0; left:0; right:0; height:28%; background:linear-gradient(to bottom,transparent,#060608); z-index:15; pointer-events:none;"></div>
@@ -187,7 +206,8 @@
         <section class="p-10 md:p-20" id="foco">
           <div class="mb-12">
             <span class="text-primary font-label-sm uppercase tracking-[0.3em] mb-3 block">Foco</span>
-            <h2 class="font-headline-lg text-[clamp(2rem,4vw,3rem)]">Temáticas</h2>
+            <h2 class="font-headline-lg text-[clamp(2rem,4vw,3rem)]">
+</h2>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-12 gap-4 md:h-[600px]">
 
@@ -199,8 +219,8 @@
               <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
               <div class="absolute bottom-8 left-8 right-8 z-10">
                 <span class="material-symbols-outlined text-primary mb-3 block">eco</span>
-                <h3 class="text-2xl font-headline-md mb-2">Sostenibilidad Radical</h3>
-                <p class="text-on-surface-variant text-sm max-w-md">Exploramos cómo la tecnología puede restaurar ecosistemas.</p>
+                <h3 class="text-2xl font-headline-md mb-2">Sostenibilidad Tecnologica</h3>
+                <p class="text-on-surface-variant text-sm max-w-md">Tecnologia basada en proyectos de alto impacto regional</p>
               </div>
             </div>
 
@@ -226,7 +246,7 @@
               <div class="absolute bottom-8 left-8 right-8 z-10">
                 <span class="material-symbols-outlined text-primary text-4xl mb-3 block">biotech</span>
                 <h3 class="text-xl font-headline-md mb-2">Biotech &amp; Salud</h3>
-                <p class="text-on-surface-variant text-sm">Resiliencia inspirada por la flora patagónica.</p>
+                <p class="text-on-surface-variant text-sm">Tecnologia focalizada Biotecnologia</p>
               </div>
             </div>
 
@@ -239,7 +259,7 @@
               <div class="absolute inset-0 bg-gradient-to-t from-black/75 to-transparent"></div>
               <div class="absolute bottom-8 left-8 right-8 z-10">
                 <h3 class="text-2xl font-headline-md mb-2">Infraestructura Digital</h3>
-                <p class="text-on-surface-variant text-sm max-w-md">Conectando los puntos más remotos con redes de alta velocidad.</p>
+                <p class="text-on-surface-variant text-sm max-w-md">Conectando nodos tecnologicos</p>
               </div>
             </div>
 
@@ -270,7 +290,7 @@
               <span class="text-label-sm text-outline uppercase tracking-wider">Días</span>
             </div>
             <div class="flex flex-col gap-2 col-span-2 md:col-span-1">
-              <span class="text-5xl font-light" style="font-family:'Noto Serif',serif">Nov<br><span style="font-size:2.5rem">'25</span></span>
+              <span class="text-5xl font-light" style="font-family:'Noto Serif',serif">Ago<br><span style="font-size:2.5rem">'26</span></span>
               <span class="text-label-sm text-outline uppercase tracking-wider">Fecha</span>
             </div>
           </div>
@@ -284,12 +304,8 @@
             <div class="flex-shrink-0 max-w-sm space-y-5">
               <span class="vanish-item text-primary font-label-sm uppercase tracking-[0.3em] block">Sede</span>
               <h2 class="vanish-item font-headline-lg text-[clamp(2rem,4vw,3.2rem)] leading-tight" style="animation-delay:80ms">San Martín<br>de los Andes</h2>
-              <p class="vanish-item font-body-lg text-on-surface-variant" style="animation-delay:160ms">Donde la precisión técnica encuentra la calma radical del bosque.</p>
+              <p class="vanish-item font-body-lg text-on-surface-variant" style="animation-delay:160ms">Ubicada a orillas del lago Lácar y custodiada por el Parque Nacional Lanín, San Martín de los Andes combina su arquitectura alpina, sus montañas nevadas y  el pulso de la innovación tecnologica</p>
               <p class="vanish-item text-sm text-outline" style="animation-delay:240ms">Neuquén, Patagonia Argentina · Nov 2025</p>
-              <p class="vanish-item text-xs text-outline/60 flex items-center gap-1.5 pt-2" style="animation-delay:320ms">
-                <span class="material-symbols-outlined text-[14px]">touch_app</span>
-                Tocá las imágenes para explorar
-              </p>
             </div>
 
             <!-- Pila de tarjetas -->
@@ -311,6 +327,13 @@
             </div>
 
           </div>
+
+          <div class="flex justify-center md:justify-end mt-10">
+            <p class="vanish-item text-xs text-outline/60 flex items-center justify-center gap-1.5 whitespace-nowrap" style="animation-delay:320ms; width:400px;">
+              <span class="material-symbols-outlined text-[14px]">touch_app</span>
+              Tocá las imágenes para explorar
+            </p>
+          </div>
         </section>
 
         <!-- ── 6. ACTIVIDADES ── -->
@@ -325,7 +348,7 @@
               <img class="strip-bg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBI1OF5hn7pplzyG977-FEjCBSdk87ztdgMIzHjTmcaYiHXWA1myxzdA1uxAsfx9XUTq0RUtlwyYO40LetE2BB8RVuMzw80Hk39KTCk-rHtrIBfiqPObdJyMPSVOT3-ycazpIZs7HxqAbH59qfGoRIiGB70tU62XrVKRydIrK_eHfpt3EeqRD9OMfv8uP9df0wWinAgWxehmhFMATdcS83WptWaboJ9qOqkBs6lG6W9yA881N9fr6_Kf9yuod1_Pfy2qzb6U9j9Dzrc" alt="">
               <div class="strip-overlay"></div>
               <div class="strip-content">
-                <span class="strip-num">01</span><span class="strip-title">Workshops en el Bosque</span>
+                <span class="strip-num">01</span><span class="strip-title">Workshops </span>
                 <p class="strip-desc">Arquitectura de nube y sistemas distribuidos en clima extremo.</p>
                 <span class="strip-cta">Ver más <span class="material-symbols-outlined text-[13px]">arrow_forward</span></span>
               </div>
@@ -336,7 +359,7 @@
               <div class="strip-overlay"></div>
               <div class="strip-content">
                 <span class="strip-num">02</span><span class="strip-title">Night Pitch Session</span>
-                <p class="strip-desc">Pitches bajo las estrellas. Inversores y fundadores al aire libre.</p>
+                <p class="strip-desc">Una instancia de alto impacto para validar modelos de negocio, recibir feedback crítico en tiempo real y asegurar el capital necesario para escalar.</p>
                 <span class="strip-cta">Ver más <span class="material-symbols-outlined text-[13px]">arrow_forward</span></span>
               </div>
             </div>
@@ -345,8 +368,8 @@
               <img class="strip-bg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtgBBlD5dDy-ar3b5AoWQqiipCGNK_Hx02OinD9xJu_9i7hEaoBYAxcBNGUrpCzH0efXHojqI7khKEvTXcDJhDAH_Ht2P3qB-zAGHLUav1KIQyr3DrobppEeJR6rpDGebUnVjqVts6Mrlbrpk3P-KB6WuA1x-PiXNLMCSI-49I7WpK6R5amGgtDJfjxt7WRfbuEJq-4WExYEUBwUCohoVwPTpP1DlEI9NJ9XBVKPhvjtqdtiZdm8x9vMGau_OCe5jQ_9uAszXHxb-b" alt="">
               <div class="strip-overlay"></div>
               <div class="strip-content">
-                <span class="strip-num">03</span><span class="strip-title">Trekking de Networking</span>
-                <p class="strip-desc">Conexiones reales a 2.000m de altura.</p>
+                <span class="strip-num">03</span><span class="strip-title">Actividad de montaña</span>
+                <p class="strip-desc">El momento de desconectar las pantallas para conectar en la cumbre. Una experiencia de esquí, snowboard y networking en las pistas del cerro, combinada con caminatas por la nieve en los paisajes más imponentes de San Martín de los Andes</p>
                 <span class="strip-cta">Ver más <span class="material-symbols-outlined text-[13px]">arrow_forward</span></span>
               </div>
             </div>
@@ -355,8 +378,8 @@
               <img class="strip-bg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBO1TCAWx-faUrpfxbcTtfB_oANPhzF6Rxh_svaPzd4gP-yxo1GyDGd155hoJhA6L5n9q2_nSIc6K2C1iSN-tXGz0d1WcrIORRr2DwuUBOV8T6fnGbCmWubem5SssUd4YWe-cFXYYy5I1MMdvbELgr0gDIOUOyRGrnOTqbcW_i2FdljRPvoqnhvoOnArDO5rN9kThXRxTJzn-0yiQaEn_DgBXyOFJ3FkU2ZkRISZOaRETF8vpRjc-AfqK8zsZ6U0WidadDHKoBF9_6J" alt="">
               <div class="strip-overlay"></div>
               <div class="strip-content">
-                <span class="strip-num">04</span><span class="strip-title">Hackatón Outdoor</span>
-                <p class="strip-desc">48hs de construcción intensiva. Premios en efectivo.</p>
+                <span class="strip-num">04</span><span class="strip-title">Hackatón </span>
+                <p class="strip-desc">Equipos de desarrolladores, diseñadores y emprendedores compitiendo en tiempo real para resolver desafíos complejos y construir soluciones viables</p>
                 <span class="strip-cta">Ver más <span class="material-symbols-outlined text-[13px]">arrow_forward</span></span>
               </div>
             </div>
@@ -365,8 +388,8 @@
               <img class="strip-bg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBI1OF5hn7pplzyG977-FEjCBSdk87ztdgMIzHjTmcaYiHXWA1myxzdA1uxAsfx9XUTq0RUtlwyYO40LetE2BB8RVuMzw80Hk39KTCk-rHtrIBfiqPObdJyMPSVOT3-ycazpIZs7HxqAbH59qfGoRIiGB70tU62XrVKRydIrK_eHfpt3EeqRD9OMfv8uP9df0wWinAgWxehmhFMATdcS83WptWaboJ9qOqkBs6lG6W9yA881N9fr6_Kf9yuod1_Pfy2qzb6U9j9Dzrc" alt="">
               <div class="strip-overlay"></div>
               <div class="strip-content">
-                <span class="strip-num">05</span><span class="strip-title">Mesa de Inversores</span>
-                <p class="strip-desc">Sesiones privadas de deal flow. Por invitación.</p>
+                <span class="strip-num">05</span><span class="strip-title">Charlas</span>
+                <p class="strip-desc">Paneles y keynotes a cargo de fundadores y líderes tecnológicos que están moviendo la frontera de la innovación.</p>
                 <span class="strip-cta">Ver más <span class="material-symbols-outlined text-[13px]">arrow_forward</span></span>
               </div>
             </div>
@@ -426,6 +449,7 @@
     (function () {
       var card   = document.getElementById('hero-card');
       var text   = document.getElementById('hero-text');
+      var btn    = document.getElementById('hero-scroll-btn');
       var header = document.getElementById('site-header');
       var raf    = null;
       function lerp(a, b, t) { return a + (b - a) * t; }
@@ -436,7 +460,8 @@
         card.style.width        = lerp(30, 100, e) + 'vw';
         card.style.height       = lerp(58, 100, e) + 'vh';
         card.style.borderRadius = lerp(32, 0, e) + 'px';
-        text.style.opacity      = Math.max(0, Math.min(1, (p - 0.6) / 0.4));
+        text.style.opacity      = Math.max(0, Math.min(1, (p - 0.45) / 0.55));
+        if (btn) btn.style.opacity = Math.max(0, Math.min(1, (p - 0.45) / 0.55));
         if (p >= 0.98) header.classList.add('visible');
         else           header.classList.remove('visible');
         raf = null;
@@ -583,6 +608,13 @@
       setTimeout(function () { msg.style.opacity = '0'; }, 5000);
     }
   </script>
+
+  <!-- ── Tweaks panel ── -->
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="tweaks-app.jsx"></script>
 
 </body>
 </html>
