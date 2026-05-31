@@ -4,7 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Patagonia Tech Week</title>
+  <link rel="icon" href="logo.png" type="image/png">
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,700;1,400&family=Hanken+Grotesk:wght@400;500;600;700&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 
@@ -69,6 +71,59 @@
       box-shadow: 0 8px 48px rgba(0,0,0,0.35);
     }
     .material-symbols-outlined { font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 24; }
+
+    /* ── Layout Preloader ── */
+    #preloader {
+      position: fixed; inset: 0; z-index: 2000;
+      background: #060608; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #preloader-grid {
+      position: absolute; inset: 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+    }
+    .pl-cell {
+      overflow: hidden;
+      clip-path: inset(100% 0 0 0);
+      will-change: clip-path;
+    }
+    .pl-cell-inner {
+      width: 100%; height: 100%;
+      background-image: url('san-martin.jpg');
+      background-size: 400% 300%;
+      transform: scale(1.25);
+      will-change: transform;
+    }
+    #preloader-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.42); z-index: 1; pointer-events: none;
+    }
+    #preloader-text {
+      position: relative; z-index: 2;
+      text-align: center; opacity: 0; transform: translateY(18px);
+    }
+    #preloader-text .pl-title {
+      font-family: 'Hanken Grotesk', sans-serif;
+      font-size: clamp(36px, 7vw, 110px);
+      font-weight: 700; color: #fff; letter-spacing: 0.04em;
+      text-transform: uppercase; line-height: 1; display: block;
+    }
+    #preloader-text .pl-sub {
+      font-family: 'Open Sans', sans-serif;
+      font-size: clamp(10px, 1.2vw, 16px);
+      font-weight: 600; color: rgba(255,255,255,0.75);
+      letter-spacing: 0.45em; text-transform: uppercase;
+      display: block; margin-top: 0.5em;
+    }
+    #preloader-noise {
+      position: absolute; inset: -10%; width: 120%; height: 120%;
+      pointer-events: none; z-index: 3; opacity: 0.06;
+      animation: noise-animation 0.18s steps(1) infinite;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
 
     /* ── Film grain / noise animation ── */
     @keyframes noise-animation {
@@ -171,11 +226,23 @@
 
 <body class="text-on-surface font-body-md selection:bg-primary/30 selection:text-on-surface overflow-x-hidden">
 
+  <!-- ══ LAYOUT PRELOADER ══ -->
+  <div id="preloader">
+    <div id="preloader-grid"></div>
+    <div id="preloader-overlay"></div>
+    <div id="preloader-text">
+      <span class="pl-sub">San Martín de los Andes · Argentina</span>
+      <span class="pl-title">PATAGONIA</span>
+      <span class="pl-sub" style="letter-spacing:0.55em; margin-top:0.3em;">Tech Week</span>
+    </div>
+    <div id="preloader-noise"></div>
+  </div>
+
   <!-- ── Header ── -->
   <header id="site-header" class="fixed z-50 flex items-center justify-between" style="top:14px; left:16px; right:16px; pointer-events:none;">
     <!-- Logo izquierda -->
-    <div style="pointer-events:auto;">
-      <img src="logo.png" alt="Patagonia Tech Week" style="height:42px; width:42px; object-fit:contain; filter:drop-shadow(0 1px 4px rgba(0,0,0,0.4));">
+    <div style="pointer-events:auto; background:rgba(255,255,255,0.18); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.30); border-radius:9999px; padding:6px;">
+      <img src="logo.png" alt="Patagonia Tech Week" style="height:34px; width:34px; object-fit:contain; display:block;">
     </div>
     <!-- Nav derecha -->
     <div style="background:rgba(255,255,255,0.22); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); border:1px solid rgba(255,255,255,0.45); border-radius:9999px; padding:0.45rem 1.1rem; display:flex; align-items:center; gap:1.5rem; pointer-events:auto;">
@@ -668,6 +735,87 @@
       e.target.reset();
       setTimeout(function () { msg.style.opacity = '0'; }, 5000);
     }
+
+    // ══ LAYOUT PRELOADER (GSAP) ══
+    (function () {
+      var COLS = 4, ROWS = 3;
+      var grid = document.getElementById('preloader-grid');
+      var preloader = document.getElementById('preloader');
+      var textEl = document.getElementById('preloader-text');
+
+      // Build grid cells — each shows its own slice of san-martin.jpg
+      var cells = [], inners = [];
+      for (var r = 0; r < ROWS; r++) {
+        for (var c = 0; c < COLS; c++) {
+          var cell = document.createElement('div');
+          cell.className = 'pl-cell';
+          var inner = document.createElement('div');
+          inner.className = 'pl-cell-inner';
+          var px = (c / (COLS - 1)) * 100;
+          var py = (r / (ROWS - 1)) * 100;
+          inner.style.backgroundPosition = px + '% ' + py + '%';
+          cell.appendChild(inner);
+          grid.appendChild(cell);
+          cells.push(cell);
+          inners.push(inner);
+        }
+      }
+
+      // Prevent scroll during preloader
+      document.body.style.overflow = 'hidden';
+
+      var tl = gsap.timeline({ onComplete: function () {
+        document.body.style.overflow = '';
+      }});
+
+      // 1 — Cells open bottom-to-top in a stagger
+      tl.to(cells, {
+        clipPath: 'inset(0% 0 0% 0)',
+        duration: 0.75,
+        ease: 'power3.out',
+        stagger: { amount: 0.55, from: 'random' }
+      }, 0);
+
+      // 2 — Images zoom to natural size
+      tl.to(inners, {
+        scale: 1,
+        duration: 1.1,
+        ease: 'power2.out',
+        stagger: { amount: 0.55, from: 'random' }
+      }, 0);
+
+      // 3 — Text appears
+      tl.to(textEl, {
+        opacity: 1,
+        y: 0,
+        duration: 0.65,
+        ease: 'power2.out'
+      }, 0.6);
+
+      // 4 — Hold 1s, then text fades
+      tl.to(textEl, {
+        opacity: 0,
+        y: -14,
+        duration: 0.45,
+        ease: 'power2.in'
+      }, 2.1);
+
+      // 5 — Grid collapses: cells clip back inward from center
+      tl.to(cells, {
+        clipPath: 'inset(0 0 100% 0)',
+        duration: 0.55,
+        ease: 'power3.in',
+        stagger: { amount: 0.3, from: 'edges' }
+      }, 2.35);
+
+      // 6 — Whole preloader slides up
+      tl.to(preloader, {
+        yPercent: -100,
+        duration: 0.7,
+        ease: 'power3.inOut',
+        onComplete: function () { preloader.style.display = 'none'; }
+      }, 2.75);
+    })();
   </script>
 
   <!-- ── Tweaks panel ── -->
