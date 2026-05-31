@@ -1,5 +1,4 @@
 ﻿<!DOCTYPE html>
-<!-- v=25c6cc5 -->
 <html class="dark" lang="es">
 <head>
   <meta charset="utf-8">
@@ -173,8 +172,13 @@
 <body class="text-on-surface font-body-md selection:bg-primary/30 selection:text-on-surface overflow-x-hidden">
 
   <!-- ── Header ── -->
-  <header id="site-header" class="fixed z-50" style="top:14px; right:16px;">
-    <div style="background:rgba(255,255,255,0.22); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); border:1px solid rgba(255,255,255,0.45); border-radius:9999px; padding:0.45rem 1.1rem; display:flex; align-items:center; gap:1.5rem;">
+  <header id="site-header" class="fixed z-50 flex items-center justify-between" style="top:14px; left:16px; right:16px; pointer-events:none;">
+    <!-- Logo izquierda -->
+    <div style="pointer-events:auto;">
+      <img src="logo.png" alt="Patagonia Tech Week" style="height:42px; width:42px; object-fit:contain; filter:drop-shadow(0 1px 4px rgba(0,0,0,0.4));">
+    </div>
+    <!-- Nav derecha -->
+    <div style="background:rgba(255,255,255,0.22); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); border:1px solid rgba(255,255,255,0.45); border-radius:9999px; padding:0.45rem 1.1rem; display:flex; align-items:center; gap:1.5rem; pointer-events:auto;">
       <a href="#foco"           class="text-sm font-medium tracking-wide transition-colors" style="color:#fff;">El Evento</a>
       <a href="#footer-contact" class="text-sm font-medium tracking-wide transition-colors" style="color:#fff;">Contacto</a>
       <a href="#registro"       class="px-4 py-1.5 rounded-full text-sm font-semibold border transition-all" style="color:#fff; border-color:rgba(255,255,255,0.45); background:rgba(255,255,255,0.20);">Aplicar</a>
