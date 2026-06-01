@@ -230,6 +230,45 @@
     .strip-cta { display:inline-flex; align-items:center; gap:6px; margin-top:0.8rem; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(188,202,189,0.9); opacity:0; transform:translateX(-5px); transition:opacity 0.3s ease 0.2s,transform 0.3s ease 0.2s; }
     .strip:hover .strip-cta { opacity:1; transform:translateX(0); }
 
+    /* ── Hero estático (post-preloader) ── */
+    #hero-static {
+      position: relative; height: 100vh; overflow: hidden;
+    }
+    #hero-static img.hero-bg {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%; object-fit: cover;
+      transform: scale(1.04);
+    }
+    #hero-static .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.18) 55%, rgba(0,0,0,0.08) 100%);
+    }
+    #hero-static .hero-noise {
+      z-index: 2;
+    }
+    #hero-title {
+      position: absolute; bottom: 7%; left: 0;
+      padding-left: 3vw; z-index: 3;
+      opacity: 0; transform: translateY(22px);
+      line-height: 0.88;
+    }
+    #hero-title span {
+      display: block;
+      font-family: 'Hanken Grotesk', sans-serif;
+      font-size: clamp(64px, 11.5vw, 175px);
+      font-weight: 700; color: #fff;
+      text-transform: uppercase; letter-spacing: -0.01em;
+    }
+    #hero-coords {
+      position: absolute; bottom: 2.5%; left: 50%;
+      transform: translateX(-50%); z-index: 3;
+      opacity: 0;
+      font-family: 'Open Sans', sans-serif;
+      font-size: clamp(10px, 0.85vw, 13px);
+      font-weight: 400; color: rgba(255,255,255,0.65);
+      letter-spacing: 0.18em; text-transform: uppercase;
+      white-space: nowrap;
+    }
     /* ── Video backgrounds ── */
     .tematica-video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
     .video-overlay  { position:absolute; inset:0; background: rgba(8,10,8,0.55); }
@@ -276,7 +315,24 @@
 
   <main>
 
-    <!-- ══ 1. TEXT REVEAL (scroll-driven) ══ -->
+    <!-- ══ 1. HERO ESTÁTICO (aparece tras el preloader) ══ -->
+    <section id="hero-static">
+      <img class="hero-bg" src="sma-nevada.png" alt="San Martín de los Andes nevado">
+      <div class="hero-overlay"></div>
+      <div class="hero-noise"></div>
+
+      <!-- Título masivo bottom-left como en la referencia -->
+      <div id="hero-title">
+        <span>PATAGONIA</span>
+        <span>TECH</span>
+        <span>WEEK</span>
+      </div>
+
+      <!-- Coordenadas centradas abajo -->
+      <div id="hero-coords">40.1500° S &nbsp;·&nbsp; 71.3566° W &nbsp;·&nbsp; Ago 2026</div>
+    </section>
+
+    <!-- ══ 2. TEXT REVEAL (scroll-driven) ══ -->
     <section id="text-reveal-section" style="height:380vh; position:relative; background:transparent;">
       <div style="position:sticky; top:0; height:100vh; display:flex; align-items:center; justify-content:center; overflow:hidden;">
 
@@ -738,7 +794,12 @@
       tl.to(preloader, {
         yPercent: -100,
         duration: 0.75, ease: 'power3.inOut',
-        onComplete: function () { preloader.style.display = 'none'; }
+        onComplete: function () {
+          preloader.style.display = 'none';
+          // Fade in hero title + coords
+          gsap.to('#hero-title', { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' });
+          gsap.to('#hero-coords', { opacity: 1, duration: 0.7, delay: 0.3, ease: 'power2.out' });
+        }
       }, 2.55);
     })();
   </script>
