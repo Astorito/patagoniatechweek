@@ -75,64 +75,63 @@
     /* ══ Layout Preloader ══ */
     #preloader {
       position: fixed; inset: 0; z-index: 2000;
-      background: #e8e8e6;
+      background: #ebebeb;
       overflow: hidden;
       display: flex; align-items: center; justify-content: center;
     }
-    /* Title text behind the image — visible in the margins */
-    #pl-bg-title {
-      position: absolute; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      z-index: 1; pointer-events: none; user-select: none;
-      padding: 0 4%;
-    }
-    #pl-bg-title span {
+    /* "PATAGONIA" in huge white — sits BEHIND the image, margins peek out */
+    #pl-title {
+      position: absolute; z-index: 1;
+      pointer-events: none; user-select: none;
+      white-space: nowrap;
       font-family: 'Hanken Grotesk', sans-serif;
-      font-size: clamp(52px, 10vw, 148px);
-      font-weight: 700; color: rgba(255,255,255,0.92);
+      font-size: 13vw;
+      font-weight: 700; color: #fff;
       text-transform: uppercase; letter-spacing: 0.04em;
-      white-space: nowrap; line-height: 1;
+      opacity: 0;
     }
     /* The expanding image container */
-    #pl-image-wrap {
+    #pl-wrap {
       position: relative; z-index: 2;
-      width: 42vw; height: 52vh;
-      border-radius: 14px;
+      width: 38vw; height: 52vh;
       overflow: hidden;
+      border-radius: 10px;
       will-change: width, height, border-radius;
-      box-shadow: 0 32px 80px rgba(0,0,0,0.28);
     }
-    /* Three image rows inside */
-    .pl-row {
-      position: absolute; left: 0; right: 0;
+    /* Top half: first image */
+    #pl-top {
+      position: absolute; top: 0; left: 0; right: 0; height: 50%;
       overflow: hidden;
-      transform: scaleY(0); transform-origin: top center;
-      will-change: transform;
     }
-    .pl-row:nth-child(1) { top: 0;        height: 33.4%; }
-    .pl-row:nth-child(2) { top: 33.33%;   height: 33.4%; }
-    .pl-row:nth-child(3) { top: 66.66%;   height: 33.4%; }
-    .pl-row img {
-      width: 100%; height: 100%;
+    #pl-top img {
+      width: 100%; height: 200%;   /* full image scaled to fill just the top half */
       object-fit: cover; display: block;
-      transform: scale(1.3);
+      transform: scale(1.15); transform-origin: center top;
       will-change: transform;
     }
-    /* Small location label */
-    #pl-location {
-      position: absolute; bottom: 22px; left: 50%;
-      transform: translateX(-50%);
-      z-index: 3; opacity: 0;
-      font-family: 'Open Sans', sans-serif;
-      font-size: clamp(10px, 0.9vw, 13px);
-      font-weight: 400; color: rgba(255,255,255,0.75);
-      letter-spacing: 0.22em; text-transform: uppercase;
-      white-space: nowrap;
+    /* Bottom half: second image */
+    #pl-bottom {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 50%;
+      overflow: hidden;
+    }
+    #pl-bottom img {
+      width: 100%; height: 200%;
+      object-fit: cover; display: block;
+      object-position: center bottom;
+      transform: scale(1.15); transform-origin: center bottom;
+      will-change: transform;
+    }
+    /* Main single image — crossfades over the two rows */
+    #pl-main {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; opacity: 0;
+      will-change: opacity;
     }
     /* Noise inside preloader */
     #pl-noise {
       position: absolute; inset: -10%; width: 120%; height: 120%;
-      pointer-events: none; z-index: 4; opacity: 0.05;
+      pointer-events: none; z-index: 4; opacity: 0.045;
       animation: noise-animation 0.18s steps(1) infinite;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
       background-size: 200px 200px;
@@ -241,24 +240,22 @@
 
   <!-- ══ LAYOUT PRELOADER ══ -->
   <div id="preloader">
-    <!-- Title visible behind the image in the margins -->
-    <div id="pl-bg-title"><span>PATAGONIA TECH WEEK</span></div>
+    <!-- Huge title behind image — only edges visible around the image -->
+    <div id="pl-title">PATAGONIA</div>
 
-    <!-- Expanding image container with 3 rows -->
-    <div id="pl-image-wrap">
-      <div class="pl-row">
-        <img src="https://rmgezixtjpt7ieit.public.blob.vercel-storage.com/slidesma4.jpg" alt="">
-      </div>
-      <div class="pl-row">
+    <!-- Image container: starts small, expands to fullscreen -->
+    <div id="pl-wrap">
+      <!-- Top half: first Patagonia photo -->
+      <div id="pl-top">
         <img src="https://rmgezixtjpt7ieit.public.blob.vercel-storage.com/slidesma3.jpg" alt="">
       </div>
-      <div class="pl-row">
-        <img src="san-martin.jpg" alt="">
+      <!-- Bottom half: second photo -->
+      <div id="pl-bottom">
+        <img src="https://rmgezixtjpt7ieit.public.blob.vercel-storage.com/slidesma4.jpg" alt="">
       </div>
+      <!-- Main image crossfades in to replace the two rows -->
+      <img id="pl-main" src="san-martin.jpg" alt="">
     </div>
-
-    <!-- Location label (appears when fullscreen) -->
-    <div id="pl-location">San Martín de los Andes · Patagonia · Argentina</div>
 
     <div id="pl-noise"></div>
   </div>
@@ -763,12 +760,11 @@
 
     // ══ LAYOUT PRELOADER (GSAP) ══
     (function () {
-      var preloader  = document.getElementById('preloader');
-      var wrap       = document.getElementById('pl-image-wrap');
-      var rows       = document.querySelectorAll('.pl-row');
-      var rowImgs    = document.querySelectorAll('.pl-row img');
-      var bgTitle    = document.getElementById('pl-bg-title');
-      var location   = document.getElementById('pl-location');
+      var preloader = document.getElementById('preloader');
+      var wrap      = document.getElementById('pl-wrap');
+      var title     = document.getElementById('pl-title');
+      var main      = document.getElementById('pl-main');
+      var topImgs   = document.querySelectorAll('#pl-top img, #pl-bottom img');
 
       document.body.style.overflow = 'hidden';
 
@@ -776,57 +772,48 @@
         onComplete: function () { document.body.style.overflow = ''; }
       });
 
-      // 1 — Rows open top-to-bottom (scaleY 0→1) with image dezoom
-      tl.to(rows, {
-        scaleY: 1,
-        duration: 0.7,
-        ease: 'power3.out',
-        stagger: 0.12
-      }, 0);
-      tl.to(rowImgs, {
-        scale: 1,
-        duration: 1.0,
-        ease: 'power2.out',
-        stagger: 0.12
-      }, 0);
+      // 0 → 0.3s: title fades in (white on gray, edges only visible past image)
+      tl.to(title, { opacity: 1, duration: 0.4, ease: 'power2.out' }, 0);
 
-      // 2 — Hold the grid a moment (0.5s pause after last row at t≈0.84)
+      // 0.1 → 0.8s: two-row image clip-reveals (top from top, bottom from bottom)
+      tl.fromTo('#pl-top',
+        { clipPath: 'inset(0 0 100% 0)' },
+        { clipPath: 'inset(0 0 0% 0)', duration: 0.6, ease: 'power3.out' },
+        0.15
+      );
+      tl.fromTo('#pl-bottom',
+        { clipPath: 'inset(100% 0 0 0)' },
+        { clipPath: 'inset(0% 0 0 0)', duration: 0.6, ease: 'power3.out' },
+        0.25
+      );
 
-      // 3 — Expand image wrap to fullscreen
+      // Dezoom images simultaneously
+      tl.to(topImgs, { scale: 1, duration: 1.0, ease: 'power2.out' }, 0.15);
+
+      // 0.8 → 1.3s: main image crossfades over the two rows
+      tl.to(main, { opacity: 1, duration: 0.55, ease: 'power2.inOut' }, 0.8);
+
+      // 1.3 → 2.5s: image expands to fullscreen, corners straighten
       tl.to(wrap, {
-        width:  '100vw',
-        height: '100vh',
-        borderRadius: 0,
-        duration: 1.1,
-        ease: 'power3.inOut'
-      }, 1.1);
+        width: '100vw', height: '100vh', borderRadius: 0,
+        duration: 1.2, ease: 'power3.inOut'
+      }, 1.3);
 
-      // 4 — Simultaneously fade background to dark + fade title
+      // Gray bg fades to dark as image fills screen
       tl.to(preloader, {
         backgroundColor: '#060608',
-        duration: 0.9,
-        ease: 'power2.inOut'
-      }, 1.3);
-      tl.to(bgTitle, {
-        opacity: 0,
-        duration: 0.5,
-        ease: 'power2.in'
-      }, 1.2);
+        duration: 0.8, ease: 'power2.inOut'
+      }, 1.6);
 
-      // 5 — Location label fades in when fullscreen
-      tl.to(location, {
-        opacity: 1,
-        duration: 0.5,
-        ease: 'power2.out'
-      }, 2.0);
+      // Title fades out as image covers it
+      tl.to(title, { opacity: 0, duration: 0.4, ease: 'power2.in' }, 1.5);
 
-      // 6 — Hold fullscreen briefly then slide preloader up
+      // 2.5 → 3.2s: preloader slides up, hero is revealed underneath
       tl.to(preloader, {
         yPercent: -100,
-        duration: 0.85,
-        ease: 'power3.inOut',
+        duration: 0.75, ease: 'power3.inOut',
         onComplete: function () { preloader.style.display = 'none'; }
-      }, 2.7);
+      }, 2.55);
     })();
   </script>
 
