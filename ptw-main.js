@@ -9,10 +9,9 @@
   if (!section || !container) return;
 
   var chunks = [
-    'Patagonia Tech Week', 'será', 'el evento', 'más importante',
-    'de tecnología', 'de Latinoamerica,', 'donde confluirá',
-    'talento tecnologico', 'regional,', 'generando un foco',
-    'de innovación único.', '—', 'El futuro', 'se diseña', 'desde el sur.'
+    'Patagonia Tech Week', 'reúne a', 'emprendedores,', 'inversores,',
+    'creadores', 'y líderes tecnológicos', 'para compartir', 'conocimiento,',
+    'generar conexiones', 'y construir', 'nuevas oportunidades', 'desde el sur', 'del mundo.'
   ];
 
   var spans = chunks.map(function (chunk) {
@@ -246,15 +245,15 @@ function handleRegistro(e) {
   // Expand stage to fullscreen
   tl.to(stage, { width: '100vw', height: '100vh', borderRadius: 0, boxShadow: 'none', duration: 1.1, ease: 'power3.inOut' }, 3.4);
   tl.to(preloader, { backgroundColor: '#060608', duration: 0.7, ease: 'none' }, 3.55);
-  tl.to('#pl-overlay', { opacity: 1, duration: 0.5, ease: 'power2.inOut' }, 4.05);
+  tl.to('#pl-overlay', { opacity: 1, duration: 0.5, ease: 'power2.inOut' }, 4.85);
 
   // Build hero over fullscreen stage
-  tl.to('#site-header',     { opacity: 1, duration: 0.55, ease: 'power2.out' }, 4.15);
-  tl.to('#pl-hero-location',{ opacity: 1, duration: 0.45, ease: 'power2.out' }, 4.35);
-  tl.to('.tl-word',         { yPercent: 0, duration: 0.88, ease: 'power4.out' }, 4.55);
-  tl.to('#pl-hero-coords',  { yPercent: 0, duration: 0.65, ease: 'power4.out' }, 5.1);
-  tl.to('#pl-hero-brand',   { opacity: 1, duration: 0.4,  ease: 'power2.out' }, 5.15);
-  tl.to('#pl-hero-card',    { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, 5.3);
+  tl.to('#site-header',     { opacity: 1, duration: 0.55, ease: 'power2.out' }, 4.95);
+  tl.to('#pl-hero-location',{ opacity: 1, duration: 0.45, ease: 'power2.out' }, 5.15);
+  tl.to('.tl-word',         { yPercent: 0, duration: 0.88, ease: 'power4.out' }, 5.35);
+  tl.to('#pl-hero-coords',  { yPercent: 0, duration: 0.65, ease: 'power4.out' }, 5.9);
+  tl.to('#pl-hero-brand',   { opacity: 1, duration: 0.4,  ease: 'power2.out' }, 5.95);
+  tl.to('#pl-hero-card',    { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, 6.1);
 
   // Convert preloader to hero (relative positioning so it flows into page)
   tl.call(function () {
@@ -264,5 +263,5 @@ function handleRegistro(e) {
     document.body.style.overflow = '';
     gsap.set('#site-header', { zIndex: 50, clearProps: 'opacity' });
     document.getElementById('site-header').classList.add('visible');
-  }, [], 6.2);
+  }, [], 7.0);
 })();
