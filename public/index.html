@@ -1,15 +1,15 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html class="dark" lang="es">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Patagonia Tech Week</title>
   <link rel="icon" href="logo.png" type="image/png">
+  <link rel="stylesheet" href="ptw-styles.css">
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,700;1,400&family=Hanken+Grotesk:wght@400;500;600;700&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-
   <script>
     tailwind.config = {
       darkMode: "class",
@@ -40,328 +40,83 @@
       },
     };
   </script>
-
-  <style>
-    /* ── Wavy dark texture background ── */
-    body {
-      background-color: #050608;
-      background-image:
-        linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),
-        url('bg-waves.png');
-      background-size: cover, cover;
-      background-position: center, center;
-      background-repeat: no-repeat, no-repeat;
-      background-attachment: fixed, fixed;
-    }
-
-    .liquid-glass {
-      background: rgba(255,255,255,0.04);
-      backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
-      border: 1px solid rgba(255,255,255,0.10);
-    }
-    :root {
-      --glass-bg: rgba(5,7,12,0.15);
-      --glass-blur: 48px;
-    }
-    .glass-panel {
-      background: var(--glass-bg);
-      backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur));
-      border-left: 1px solid rgba(255,255,255,0.07);
-      border-right: 1px solid rgba(255,255,255,0.07);
-      box-shadow: 0 8px 48px rgba(0,0,0,0.35);
-    }
-    .material-symbols-outlined { font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 24; }
-
-    /* ══ Layout Preloader ══ */
-    #preloader {
-      position: fixed; inset: 0; z-index: 2000;
-      background: #ebebeb;
-      overflow: hidden;
-      display: flex; align-items: center; justify-content: center;
-    }
-    /* "PATAGONIA" in huge white — sits BEHIND the image, margins peek out */
-    #pl-title {
-      position: absolute; z-index: 1;
-      pointer-events: none; user-select: none;
-      white-space: nowrap;
-      font-family: 'Hanken Grotesk', sans-serif;
-      font-size: 13vw;
-      font-weight: 700; color: #fff;
-      text-transform: uppercase; letter-spacing: 0.04em;
-      opacity: 0;
-    }
-    /* The expanding image container */
-    #pl-wrap {
-      position: relative; z-index: 2;
-      width: 38vw; height: 52vh;
-      overflow: hidden;
-      border-radius: 10px;
-      will-change: width, height, border-radius;
-    }
-    /* Top half: first image */
-    #pl-top {
-      position: absolute; top: 0; left: 0; right: 0; height: 50%;
-      overflow: hidden;
-    }
-    #pl-top img {
-      width: 100%; height: 200%;   /* full image scaled to fill just the top half */
-      object-fit: cover; display: block;
-      transform: scale(1.15); transform-origin: center top;
-      will-change: transform;
-    }
-    /* Bottom half: second image */
-    #pl-bottom {
-      position: absolute; bottom: 0; left: 0; right: 0; height: 50%;
-      overflow: hidden;
-    }
-    #pl-bottom img {
-      width: 100%; height: 200%;
-      object-fit: cover; display: block;
-      object-position: center bottom;
-      transform: scale(1.15); transform-origin: center bottom;
-      will-change: transform;
-    }
-    /* Main single image — crossfades over the two rows */
-    #pl-main {
-      position: absolute; inset: 0;
-      width: 100%; height: 100%;
-      object-fit: cover; opacity: 0;
-      will-change: opacity;
-    }
-    /* Noise inside preloader */
-    #pl-noise {
-      position: absolute; inset: -10%; width: 120%; height: 120%;
-      pointer-events: none; z-index: 4; opacity: 0.045;
-      animation: noise-animation 0.18s steps(1) infinite;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-      background-size: 200px 200px;
-    }
-
-    /* ── Film grain / noise animation ── */
-    @keyframes noise-animation {
-      0%   { transform: translate(0,0); }
-      10%  { transform: translate(-2%,-3%); }
-      20%  { transform: translate(-4%, 2%); }
-      30%  { transform: translate( 2%,-4%); }
-      40%  { transform: translate(-2%, 5%); }
-      50%  { transform: translate(-4%, 2%); }
-      60%  { transform: translate( 3%, 0);  }
-      70%  { transform: translate( 0,  3%); }
-      80%  { transform: translate(-3%, 0);  }
-      90%  { transform: translate( 2%, 2%); }
-      100% { transform: translate( 1%, 0);  }
-    }
-    .hero-noise {
-      position: absolute;
-      inset: -10%;
-      width: 120%; height: 120%;
-      pointer-events: none;
-      z-index: 4;
-      opacity: 0.055;
-      animation: noise-animation 0.18s steps(1) infinite;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-      background-size: 200px 200px;
-    }
-
-    /* ── Hero scroll hint ── */
-    @keyframes scrollHint {
-      0%,100% { transform: translateY(0);   opacity:0.6; }
-      50%      { transform: translateY(5px); opacity:1;   }
-    }
-
-    /* ── Header ── */
-    #site-header { opacity:0; pointer-events:none; transition: opacity 0.5s ease; }
-    #site-header.visible { opacity:1; pointer-events:auto; }
-
-    /* ── Vanish ── */
-    @keyframes vanishIn {
-      from { opacity:0; transform:translateY(24px); filter:blur(7px); }
-      to   { opacity:1; transform:translateY(0);    filter:blur(0);   }
-    }
-    .vanish-item { opacity:0; }
-    .vanish-item.revealed { animation: vanishIn 0.7s cubic-bezier(0.22,1,0.36,1) forwards; }
-
-    /* ── Scroll hint button ── */
-    @keyframes scrollHint {
-      0%, 100% { transform: translateY(0); opacity: 0.85; }
-      50%      { transform: translateY(4px); opacity: 1; }
-    }
-    #hero-scroll-btn:hover { border-color: rgba(255,255,255,0.95) !important; transform: translateX(-50%) scale(1.06) !important; }
-
-    /* ── Text reveal words ── */
-    .reveal-word {
-      display: inline;
-      color: white;
-      opacity: 0.1;
-      transition: opacity 0.05s linear;
-    }
-
-    /* ── Click-to-dismiss stacked cards ── */
-    .click-card {
-      position: absolute;
-      width: 360px; height: 270px;
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 20px 56px rgba(0,0,0,0.6);
-      will-change: transform, opacity;
-    }
-    .click-card img,
-    .click-card video { width:100%; height:100%; object-fit:cover; display:block; }
-
-    @keyframes cardPulse {
-      0%, 100% { box-shadow: 0 20px 56px rgba(0,0,0,0.6); }
-      50%       { box-shadow: 0 20px 56px rgba(0,0,0,0.6), 0 0 0 3px rgba(188,202,189,0.35); }
-    }
-    .click-card.top-card { cursor: pointer; animation: cardPulse 2.5s ease-in-out infinite; }
-    .click-card.top-card:hover { filter: brightness(1.07); }
-
-    /* ── Vertical strips ── */
-    .strips-container { display:flex; height:72vh; min-height:420px; border-radius:1.5rem; overflow:hidden; gap:3px; }
-    .strip { flex:1; position:relative; cursor:pointer; overflow:hidden; transition:flex 0.7s cubic-bezier(0.4,0,0.2,1); }
-    .strip:hover { flex:5; }
-    .strip-bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform 0.7s ease; }
-    .strip:hover .strip-bg { transform:scale(1.06); }
-    .strip-overlay { position:absolute; inset:0; background:linear-gradient(to top,rgba(0,0,0,0.88) 0%,rgba(0,0,0,0.2) 55%,transparent 100%); }
-    .strip-content { position:absolute; bottom:0; left:0; right:0; padding:1.25rem 1.5rem; }
-    .strip-num { font-size:10px; font-weight:600; letter-spacing:0.25em; color:rgba(188,202,189,0.8); text-transform:uppercase; display:block; margin-bottom:0.35rem; }
-    .strip-title { font-family:'Noto Serif',serif; font-size:13px; color:white; white-space:nowrap; overflow:hidden; display:block; }
-    .strip-desc { font-size:13px; color:rgba(255,255,255,0.65); margin-top:0.75rem; max-height:0; overflow:hidden; opacity:0; transition:max-height 0.4s ease,opacity 0.3s ease 0.15s; line-height:1.65; }
-    .strip:hover .strip-desc { max-height:100px; opacity:1; }
-    .strip-cta { display:inline-flex; align-items:center; gap:6px; margin-top:0.8rem; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(188,202,189,0.9); opacity:0; transform:translateX(-5px); transition:opacity 0.3s ease 0.2s,transform 0.3s ease 0.2s; }
-    .strip:hover .strip-cta { opacity:1; transform:translateX(0); }
-
-    /* ── Hero estático (post-preloader) ── */
-    #hero-static {
-      position: relative; height: 100vh; overflow: hidden;
-    }
-    #hero-static img.hero-bg {
-      position: absolute; inset: 0;
-      width: 100%; height: 100%; object-fit: cover;
-      transform: scale(1.04);
-    }
-    #hero-static .hero-overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.18) 55%, rgba(0,0,0,0.08) 100%);
-    }
-    #hero-static .hero-noise {
-      z-index: 2;
-    }
-    #hero-title {
-      position: absolute; bottom: 7%; left: 0;
-      padding-left: 3vw; z-index: 3;
-      opacity: 0; transform: translateY(22px);
-      line-height: 0.88;
-    }
-    #hero-title span {
-      display: block;
-      font-family: 'Hanken Grotesk', sans-serif;
-      font-size: clamp(64px, 11.5vw, 175px);
-      font-weight: 700; color: #fff;
-      text-transform: uppercase; letter-spacing: -0.01em;
-    }
-    #hero-coords {
-      position: absolute; bottom: 2.5%; left: 50%;
-      transform: translateX(-50%); z-index: 3;
-      opacity: 0;
-      font-family: 'Open Sans', sans-serif;
-      font-size: clamp(10px, 0.85vw, 13px);
-      font-weight: 400; color: rgba(255,255,255,0.65);
-      letter-spacing: 0.18em; text-transform: uppercase;
-      white-space: nowrap;
-    }
-    /* ── Video backgrounds ── */
-    .tematica-video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
-    .video-overlay  { position:absolute; inset:0; background: rgba(8,10,8,0.55); }
-  </style>
 </head>
 
 <body class="text-on-surface font-body-md selection:bg-primary/30 selection:text-on-surface overflow-x-hidden">
 
-  <!-- ══ LAYOUT PRELOADER ══ -->
+  <!-- ══ PRELOADER ══ -->
   <div id="preloader">
-    <!-- Huge title behind image — only edges visible around the image -->
-    <div id="pl-title">PATAGONIA</div>
-
-    <!-- Image container: starts small, expands to fullscreen -->
-    <div id="pl-wrap">
-      <!-- Top half: first Patagonia photo -->
-      <div id="pl-top">
-        <img src="https://rmgezixtjpt7ieit.public.blob.vercel-storage.com/slidesma3.jpg" alt="">
+    <div id="card-stage">
+      <div class="pl-card" id="pl-card-1"><img src="pl-lacar.jpg" alt=""></div>
+      <div class="pl-card" id="pl-card-2"><img src="pl-pesca.jpg" alt=""></div>
+      <div class="pl-card" id="pl-card-3"><img src="pl-kayak.jpg" alt=""></div>
+      <div class="pl-card" id="pl-card-4"><img src="pl-otono.avif" alt=""></div>
+      <div class="pl-card" id="pl-card-5"><img src="pl-nieve.jpg" alt=""></div>
+      <div class="pl-card" id="pl-card-6">
+        <img src="sma-nevada.png" alt="">
+        <div id="pl-overlay"></div>
       </div>
-      <!-- Bottom half: second photo -->
-      <div id="pl-bottom">
-        <img src="https://rmgezixtjpt7ieit.public.blob.vercel-storage.com/slidesma4.jpg" alt="">
-      </div>
-      <!-- Main image crossfades in to replace the two rows -->
-      <img id="pl-main" src="san-martin.jpg" alt="">
     </div>
 
+    <div id="pl-hero-location">San Martín de los Andes &nbsp;·&nbsp; 2026</div>
+
+    <div id="pl-hero-title">
+      <div class="tl-clip"><span class="tl-word">PATAGONIA</span></div>
+      <div class="tl-clip"><span class="tl-word">TECH</span></div>
+      <div class="tl-clip"><span class="tl-word">WEEK</span></div>
+    </div>
+
+    <div id="pl-coords-wrap">
+      <span id="pl-hero-coords">40.1500° S &nbsp;·&nbsp; 71.3566° W &nbsp;·&nbsp; AGO 2026</span>
+    </div>
+
+    <div id="pl-hero-brand">Builders &nbsp;+&nbsp; Bit Cotesma</div>
+
+    <div id="pl-hero-card" style="opacity: 0.92">
+      <span class="card-label">Next Event</span>
+      <div class="card-date" style="opacity: 0.45">Aug 21—28</div>
+      <button class="card-btn" onclick="document.getElementById('registro').scrollIntoView()">Apply to Attend</button>
+    </div>
+
+    <div id="hero-bottom-fade"></div>
     <div id="pl-noise"></div>
   </div>
 
-  <!-- ── Header ── -->
+  <!-- ── HEADER ── -->
   <header id="site-header" class="fixed z-50 flex items-center justify-between" style="top:14px; left:16px; right:16px; pointer-events:none;">
-    <!-- Logo izquierda -->
-    <div style="pointer-events:auto; background:rgba(255,255,255,0.18); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.30); border-radius:9999px; padding:6px;">
-      <img src="logo.png" alt="Patagonia Tech Week" style="height:34px; width:34px; object-fit:contain; display:block;">
+    <div style="pointer-events:auto;">
+      <img src="logo.png" alt="Patagonia Tech Week" style="height:40px; width:40px; object-fit:contain; display:block;">
     </div>
-    <!-- Nav derecha -->
-    <div style="background:rgba(255,255,255,0.22); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); border:1px solid rgba(255,255,255,0.45); border-radius:9999px; padding:0.45rem 1.1rem; display:flex; align-items:center; gap:1.5rem; pointer-events:auto;">
-      <a href="#foco"           class="text-sm font-medium tracking-wide transition-colors" style="color:#fff;">El Evento</a>
+    <nav style="background:rgba(255,255,255,0.22); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); border:1px solid rgba(255,255,255,0.45); border-radius:9999px; padding:0.45rem 1.1rem; display:flex; align-items:center; gap:1.5rem; pointer-events:auto;">
+      <a href="#foco"           class="text-sm font-medium tracking-wide transition-colors nav-hide-xs" style="color:#fff;">El Evento</a>
+      <a href="#speakers"       class="text-sm font-medium tracking-wide transition-colors nav-hide-xs" style="color:#fff;">Speakers</a>
       <a href="#footer-contact" class="text-sm font-medium tracking-wide transition-colors" style="color:#fff;">Contacto</a>
       <a href="#registro"       class="px-4 py-1.5 rounded-full text-sm font-semibold border transition-all" style="color:#fff; border-color:rgba(255,255,255,0.45); background:rgba(255,255,255,0.20);">Aplicar</a>
-    </div>
+    </nav>
   </header>
 
   <main>
 
-    <!-- ══ 1. HERO ESTÁTICO (aparece tras el preloader) ══ -->
-    <section id="hero-static">
-      <img class="hero-bg" src="sma-nevada.png" alt="San Martín de los Andes nevado">
-      <div class="hero-overlay"></div>
-      <div class="hero-noise"></div>
-
-      <!-- Título masivo bottom-left como en la referencia -->
-      <div id="hero-title">
-        <span>PATAGONIA</span>
-        <span>TECH</span>
-        <span>WEEK</span>
-      </div>
-
-      <!-- Coordenadas centradas abajo -->
-      <div id="hero-coords">40.1500° S &nbsp;·&nbsp; 71.3566° W &nbsp;·&nbsp; Ago 2026</div>
-    </section>
-
-    <!-- ══ 2. TEXT REVEAL (scroll-driven) ══ -->
-    <section id="text-reveal-section" style="height:380vh; position:relative; background:transparent;">
+    <!-- ══ TEXT REVEAL ══ -->
+    <section id="text-reveal-section" style="height:380vh; position:relative; background:#060608;">
       <div style="position:sticky; top:0; height:100vh; display:flex; align-items:center; justify-content:center; overflow:hidden;">
-
-        <!-- Subtle top gradient so it blends with hero -->
         <div style="position:absolute; top:0; left:0; right:0; height:12vh; background:linear-gradient(to bottom,#060608,transparent); z-index:2; pointer-events:none;"></div>
-
         <div style="max-width:92%; width:100%; text-align:left; padding:0 4%; z-index:1;">
-          <p id="reveal-text"
-             style="font-family:'Hanken Grotesk',sans-serif; font-size:clamp(2.1rem,4.8vw,5rem); font-weight:600; line-height:1.45; letter-spacing:-0.02em; overflow-wrap:normal; word-break:normal; hyphens:none;">
-            <!-- Each word is wrapped in a span by JS — see initTextReveal() -->
-          </p>
+          <p id="reveal-text" style="font-family:'Hanken Grotesk',sans-serif; font-size:clamp(2.1rem,4.8vw,5rem); font-weight:600; line-height:1.45; letter-spacing:-0.02em; overflow-wrap:normal; word-break:normal; hyphens:none;"></p>
         </div>
-
-        <!-- Bottom gradient -->
         <div style="position:absolute; bottom:0; left:0; right:0; height:14vh; background:linear-gradient(to top,#060608,transparent); z-index:2; pointer-events:none;"></div>
       </div>
     </section>
 
-    <!-- ══ GLASS CONTAINER (todo el contenido de secciones 3–8) ══ -->
-    <div class="relative z-20 w-[95%] mx-auto glass-panel mb-24 overflow-hidden"
-         style="border:1px solid rgba(255,255,255,0.05); border-radius:3rem;">
+    <!-- ══ GLASS CONTAINER ══ -->
+    <div class="relative z-20 w-[95%] mx-auto glass-panel mb-24 overflow-hidden" style="border:1px solid rgba(255,255,255,0.05); border-radius:3rem;">
       <div class="divide-y divide-white/5">
 
-        <!-- ── 3. FOCO / TEMÁTICAS ── -->
+        <!-- ── 1. TEMÁTICAS ── -->
         <section class="p-10 md:p-20" id="foco">
           <div class="mb-12">
             <span class="text-primary font-label-sm uppercase tracking-[0.3em] mb-3 block">Foco</span>
-            <h2 class="font-headline-lg text-[clamp(2rem,4vw,3rem)]">
-</h2>
+            <h2 class="font-headline-lg text-[clamp(2rem,4vw,3rem)]">Temáticas</h2>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-12 gap-4 md:h-[600px]">
 
@@ -400,7 +155,7 @@
               <div class="absolute bottom-8 left-8 right-8 z-10">
                 <span class="material-symbols-outlined text-primary text-4xl mb-3 block">biotech</span>
                 <h3 class="text-xl font-headline-md mb-2">Biotech &amp; Salud</h3>
-                <p class="text-on-surface-variant text-sm">Tecnologia focalizada Biotecnologia</p>
+                <p class="text-on-surface-variant text-sm">Tecnologia focalizada en Biotecnologia</p>
               </div>
             </div>
 
@@ -420,12 +175,8 @@
           </div>
         </section>
 
-        <!-- ── 4. CIFRAS ── -->
+        <!-- ── 2. CIFRAS ── -->
         <section id="stats-section" class="p-10 md:p-20">
-          <div class="mb-12">
-            <span class="text-primary font-label-sm uppercase tracking-[0.3em] mb-3 block">El Evento</span>
-            <h2 class="font-headline-lg text-[clamp(2rem,4vw,3rem)]">En números</h2>
-          </div>
           <div id="stats-grid" class="grid grid-cols-2 md:grid-cols-5 gap-10 text-center">
             <div class="flex flex-col gap-2">
               <span class="text-5xl font-light" style="font-family:'Noto Serif',serif"><span class="counter" data-target="50" data-suffix="+">0</span></span>
@@ -444,25 +195,21 @@
               <span class="text-label-sm text-outline uppercase tracking-wider">Días</span>
             </div>
             <div class="flex flex-col gap-2 col-span-2 md:col-span-1">
-              <span class="text-5xl font-light" style="font-family:'Noto Serif',serif">Ago<br><span style="font-size:2.5rem">'26</span></span>
+              <span class="text-5xl font-light" style="font-family:'Noto Serif',serif; white-space:nowrap;">Ago '26</span>
               <span class="text-label-sm text-outline uppercase tracking-wider">Fecha</span>
             </div>
           </div>
         </section>
 
-        <!-- ── 5. SEDE ── -->
+        <!-- ── 3. SEDE ── -->
         <section id="venue" class="p-10 md:p-20">
           <div class="flex flex-col md:flex-row items-center gap-10 md:gap-16">
-
-            <!-- Texto SMA -->
             <div class="flex-shrink-0 max-w-sm space-y-5">
               <span class="vanish-item text-primary font-label-sm uppercase tracking-[0.3em] block">Sede</span>
               <h2 class="vanish-item font-headline-lg text-[clamp(2rem,4vw,3.2rem)] leading-tight" style="animation-delay:80ms">San Martín<br>de los Andes</h2>
-              <p class="vanish-item font-body-lg text-on-surface-variant" style="animation-delay:160ms">Ubicada a orillas del lago Lácar y custodiada por el Parque Nacional Lanín, San Martín de los Andes combina su arquitectura alpina, sus montañas nevadas y  el pulso de la innovación tecnologica</p>
-              <p class="vanish-item text-sm text-outline" style="animation-delay:240ms">Neuquén, Patagonia Argentina · Nov 2025</p>
+              <p id="sede-appear" class="font-body-lg text-on-surface-variant" data-text="Ubicada a orillas del lago Lácar y custodiada por el Parque Nacional Lanín, San Martín de los Andes combina su arquitectura alpina, sus montañas nevadas y el pulso de la innovación tecnologica."></p>
+              <p class="vanish-item text-sm text-outline" style="animation-delay:240ms">Neuquén, Patagonia Argentina · Agosto 2026</p>
             </div>
-
-            <!-- Pila de tarjetas -->
             <div class="flex-1 flex justify-center md:justify-end">
               <div id="sede-stack" class="relative" style="width:400px; height:310px;">
                 <div class="click-card" style="z-index:1; transform:rotate(-5deg) translate(-16px, 14px);">
@@ -479,9 +226,7 @@
                 </div>
               </div>
             </div>
-
           </div>
-
           <div class="flex justify-center md:justify-end mt-10">
             <p class="vanish-item text-xs text-outline/60 flex items-center justify-center gap-1.5 whitespace-nowrap" style="animation-delay:320ms; width:400px;">
               <span class="material-symbols-outlined text-[14px]">touch_app</span>
@@ -489,6 +234,102 @@
             </p>
           </div>
         </section>
+
+        <!-- ── 4. SPEAKERS ──────────────────────── NEW ── -->
+        <section class="p-10 md:p-20" id="speakers">
+          <div class="mb-12">
+            <span class="text-primary font-label-sm uppercase tracking-[0.3em] mb-3 block">Speakers</span>
+            <h2 class="font-headline-lg text-[clamp(2rem,4vw,3rem)]">
+</h2>
+          </div>
+
+          <div class="speaker-grid">
+
+            <!-- Confirmed placeholders — replace src with real headshots -->
+            <div class="speaker-card">
+              <img class="spk-img" src="pl-lacar.jpg" alt="Valentina Ríos">
+              <div class="spk-gradient"></div>
+              <div class="spk-content">
+                <div class="spk-name">Valentina Ríos</div>
+                <div class="spk-company">Fundadora · SurTech AI</div>
+                <span class="spk-tag">IA Generativa</span>
+              </div>
+            </div>
+
+            <div class="speaker-card">
+              <img class="spk-img" src="pl-nieve.jpg" alt="Sebastián Mora">
+              <div class="spk-gradient"></div>
+              <div class="spk-content">
+                <div class="spk-name">Sebastián Mora</div>
+                <div class="spk-company">CTO · AndesCloud</div>
+                <span class="spk-tag">Infraestructura</span>
+              </div>
+            </div>
+
+            <div class="speaker-card">
+              <img class="spk-img" src="pl-kayak.jpg" alt="Andrés Fuentes">
+              <div class="spk-gradient"></div>
+              <div class="spk-content">
+                <div class="spk-name">Andrés Fuentes</div>
+                <div class="spk-company">Partner · PatagoniaVC</div>
+                <span class="spk-tag">Inversión &amp; VC</span>
+              </div>
+            </div>
+
+            <div class="speaker-card">
+              <img class="spk-img" src="pl-otono.avif" alt="Carla López">
+              <div class="spk-gradient"></div>
+              <div class="spk-content">
+                <div class="spk-name">Carla López</div>
+                <div class="spk-company">Investigadora · CONICET</div>
+                <span class="spk-tag">Biotech</span>
+              </div>
+            </div>
+
+            <!-- TBA cards -->
+            <div class="speaker-card spk-tba" style="background:rgba(255,255,255,0.03);">
+              <div class="spk-gradient" style="background:linear-gradient(to top,rgba(0,0,0,0.7) 0%,transparent 100%);"></div>
+              <div class="spk-content">
+                <div class="spk-name">Por anunciar</div>
+                <span class="spk-tag">Sostenibilidad</span>
+              </div>
+            </div>
+
+            <div class="speaker-card spk-tba" style="background:rgba(255,255,255,0.03);">
+              <div class="spk-gradient" style="background:linear-gradient(to top,rgba(0,0,0,0.7) 0%,transparent 100%);"></div>
+              <div class="spk-content">
+                <div class="spk-name">Por anunciar</div>
+                <span class="spk-tag">Deep Tech</span>
+              </div>
+            </div>
+
+            <div class="speaker-card spk-tba" style="background:rgba(255,255,255,0.03);">
+              <div class="spk-gradient" style="background:linear-gradient(to top,rgba(0,0,0,0.7) 0%,transparent 100%);"></div>
+              <div class="spk-content">
+                <div class="spk-name">Por anunciar</div>
+                <span class="spk-tag">Futuro del Trabajo</span>
+              </div>
+            </div>
+
+            <div class="speaker-card spk-tba" style="background:rgba(255,255,255,0.03);">
+              <div class="spk-gradient" style="background:linear-gradient(to top,rgba(0,0,0,0.7) 0%,transparent 100%);"></div>
+              <div class="spk-content">
+                <div class="spk-name">Por anunciar</div>
+                <span class="spk-tag">Política Tecnológica</span>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="mt-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <p class="text-sm text-outline">Más de 50 speakers confirmados próximamente</p>
+            <a href="#registro" class="text-sm text-primary flex items-center gap-1.5 hover:gap-3 transition-all duration-200">
+              ¿Sos speaker? Postulate <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+            </a>
+          </div>
+        </section>
+
+
 
         <!-- ── 6. ACTIVIDADES ── -->
         <section class="p-10 md:p-20" id="activities">
@@ -502,7 +343,7 @@
               <img class="strip-bg" src="https://rmgezixtjpt7ieit.public.blob.vercel-storage.com/charlas.jpg" alt="">
               <div class="strip-overlay"></div>
               <div class="strip-content">
-                <span class="strip-num">01</span><span class="strip-title">Workshops </span>
+                <span class="strip-num">01</span><span class="strip-title">Workshops</span>
                 <p class="strip-desc">Arquitectura de nube y sistemas distribuidos en clima extremo.</p>
                 <span class="strip-cta">Ver más <span class="material-symbols-outlined text-[13px]">arrow_forward</span></span>
               </div>
@@ -523,7 +364,7 @@
               <div class="strip-overlay"></div>
               <div class="strip-content">
                 <span class="strip-num">03</span><span class="strip-title">Actividad de montaña</span>
-                <p class="strip-desc">El momento de desconectar las pantallas para conectar en la cumbre. Una experiencia de esquí, snowboard y networking en las pistas del cerro, combinada con caminatas por la nieve en los paisajes más imponentes de San Martín de los Andes</p>
+                <p class="strip-desc">Esquí, snowboard y networking en las pistas del cerro. Los paisajes más imponentes de San Martín de los Andes.</p>
                 <span class="strip-cta">Ver más <span class="material-symbols-outlined text-[13px]">arrow_forward</span></span>
               </div>
             </div>
@@ -532,8 +373,8 @@
               <img class="strip-bg" src="https://rmgezixtjpt7ieit.public.blob.vercel-storage.com/hackaton.jpg" alt="">
               <div class="strip-overlay"></div>
               <div class="strip-content">
-                <span class="strip-num">04</span><span class="strip-title">Hackatón </span>
-                <p class="strip-desc">Equipos de desarrolladores, diseñadores y emprendedores compitiendo en tiempo real para resolver desafíos complejos y construir soluciones viables</p>
+                <span class="strip-num">04</span><span class="strip-title">Hackatón</span>
+                <p class="strip-desc">Equipos compitiendo en tiempo real para resolver desafíos complejos y construir soluciones viables.</p>
                 <span class="strip-cta">Ver más <span class="material-symbols-outlined text-[13px]">arrow_forward</span></span>
               </div>
             </div>
@@ -543,7 +384,7 @@
               <div class="strip-overlay"></div>
               <div class="strip-content">
                 <span class="strip-num">05</span><span class="strip-title">Charlas</span>
-                <p class="strip-desc">Paneles y keynotes a cargo de fundadores y líderes tecnológicos que están moviendo la frontera de la innovación.</p>
+                <p class="strip-desc">Paneles y keynotes a cargo de fundadores y líderes tecnológicos que mueven la frontera de la innovación.</p>
                 <span class="strip-cta">Ver más <span class="material-symbols-outlined text-[13px]">arrow_forward</span></span>
               </div>
             </div>
@@ -551,14 +392,16 @@
           </div>
         </section>
 
-        <!-- ── 7. PARTNERS ── -->
-        <section class="py-20 text-center px-10" id="partners">
-          <h2 class="font-label-sm uppercase tracking-[0.5em] mb-12 opacity-30">Partners</h2>
-          <div class="flex flex-wrap justify-center gap-12 grayscale opacity-30">
-            <span class="text-lg font-bold tracking-tighter">TECHCORP</span>
-            <span class="text-lg font-bold tracking-tighter">ANDESVENTURES</span>
-            <span class="text-lg font-bold tracking-tighter">SILICONMOUNTAIN</span>
-            <span class="text-lg font-bold tracking-tighter">NEUQUÉNLABS</span>
+        <!-- ── 7. SPONSORS ── -->
+        <section class="p-10 md:p-20" id="sponsors">
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div>
+              <p class="text-on-surface font-medium mb-1">¿Tu empresa quiere estar acá?</p>
+              <p class="text-sm text-outline">Sponsorear Patagonia Tech Week es conectar tu marca con el mejor talento tech de LATAM.</p>
+            </div>
+            <a href="#registro" class="sponsor-cta-btn whitespace-nowrap">
+              Ser partner <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+            </a>
           </div>
         </section>
 
@@ -584,7 +427,8 @@
     <div class="max-w-[1280px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
       <div class="text-center md:text-left">
         <div class="text-base font-medium">Patagonia Tech Week</div>
-        <p class="text-label-sm text-outline mt-1.5">© 2025 San Martín de los Andes, Argentina.</p>
+        <p class="text-label-sm text-outline mt-1.5">© 2026 San Martín de los Andes, Argentina.
+Website: juanchi.xyz</p>
       </div>
       <nav class="flex gap-8 text-label-sm uppercase tracking-widest text-on-surface/40">
         <a href="#" class="hover:text-primary transition-colors">Contacto</a>
@@ -598,213 +442,9 @@
     </div>
   </footer>
 
-  <script>
-    // ── 1. Header always visible (no hero scroll) ──
-    document.getElementById('site-header').classList.add('visible');
+  <!-- Scripts -->
+  <script src="ptw-main.js"></script>
 
-    // ── 2. Text reveal ──
-    (function () {
-      var section = document.getElementById('text-reveal-section');
-      var container = document.getElementById('reveal-text');
-
-      // The full text to reveal, broken into "chunks" for visual rhythm
-      var chunks = [
-        'Patagonia Tech Week', 'será', 'el evento', 'más importante',
-        'de tecnología', 'de Latinoamerica,', 'donde confluirá',
-        'talento tecnologico', 'regional,', 'generando un foco',
-        'de innovación único.', '—', 'El futuro', 'se diseña', 'desde el sur.'
-      ];
-
-      // Build spans — trailing space prevents words running together
-      var spans = chunks.map(function (chunk) {
-        var sp = document.createElement('span');
-        sp.className = 'reveal-word';
-        var isUnder = chunk.charAt(0) === '§';
-        var text = isUnder ? chunk.slice(1) : chunk;
-        sp.textContent = text + ' ';
-        if (isUnder) {
-          sp.style.textDecoration = 'underline';
-          sp.style.textDecorationThickness = '2px';
-          sp.style.textUnderlineOffset = '0.18em';
-        }
-        container.appendChild(sp);
-        return sp;
-      });
-
-      var N   = spans.length;
-      var raf = null;
-
-      function easeInOut(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
-
-      function update() {
-        var rect     = section.getBoundingClientRect();
-        var scrolled = -rect.top;                              // px scrolled into section
-        var range    = section.offsetHeight - window.innerHeight; // total scrollable range
-        var prog     = Math.max(0, Math.min(1, scrolled / range));
-
-        spans.forEach(function (sp, i) {
-          // Each word occupies a window: [i/N … (i+1)/N] of total progress
-          // But we spread the leading edge so first word starts at 0 and last at 0.85
-          var wordStart = (i / N) * 0.85;
-          var wordEnd   = wordStart + 0.18;
-          var t = Math.max(0, Math.min(1, (prog - wordStart) / (wordEnd - wordStart)));
-          sp.style.opacity = 0.1 + easeInOut(t) * 0.9;
-        });
-
-        raf = null;
-      }
-
-      window.addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
-      update();
-    })();
-
-    // ── 3. Click-to-dismiss card stacks ──
-    function initClickStack(stackId) {
-      var stack = document.getElementById(stackId);
-      if (!stack) return;
-      var cards  = Array.from(stack.querySelectorAll('.click-card'));
-      var topIdx = cards.length - 1;
-
-      function setTop(idx) {
-        cards.forEach(function (c) { c.classList.remove('top-card'); c.onclick = null; c.style.cursor = 'default'; });
-        if (idx < 0) return;
-        var topCard = cards[idx];
-        topCard.classList.add('top-card');
-        topCard.onclick = function () {
-          var baseTransform = topCard.style.transform;
-          topCard.style.pointerEvents = 'none';
-          topCard.animate([
-            { transform: baseTransform,                                                    opacity: '1' },
-            { transform: 'translateY(-180px) translateX(80px) rotate(25deg) scale(0.75)', opacity: '0' }
-          ], { duration: 520, easing: 'cubic-bezier(0.4,0,0.6,1)', fill: 'forwards' });
-          setTimeout(function () {
-            topCard.style.visibility = 'hidden';
-            topIdx--;
-            setTop(topIdx);
-          }, 520);
-        };
-      }
-      setTop(topIdx);
-    }
-    initClickStack('sede-stack');
-
-    // ── 4. Vanish ──
-    (function () {
-      var obs = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            var el = entry.target;
-            setTimeout(function () { el.classList.add('revealed'); }, parseInt(el.style.animationDelay) || 0);
-            obs.unobserve(el);
-          }
-        });
-      }, { threshold: 0.15 });
-      document.querySelectorAll('.vanish-item').forEach(function (el) { obs.observe(el); });
-    })();
-
-    // ── 5. Counters (2500ms ease-out-quart) ──
-    (function () {
-      var fired = false;
-      function run(el) {
-        var target = parseInt(el.dataset.target, 10), suffix = el.dataset.suffix || '', start = performance.now(), dur = 2500;
-        function step(now) {
-          var t = Math.min(1, (now - start) / dur);
-          el.textContent = Math.round((1 - Math.pow(1 - t, 4)) * target) + suffix;
-          if (t < 1) requestAnimationFrame(step);
-        }
-        requestAnimationFrame(step);
-      }
-      var obs = new IntersectionObserver(function (entries) {
-        if (fired) return;
-        if (entries.some(function (e) { return e.isIntersecting; })) { fired = true; document.querySelectorAll('.counter').forEach(run); obs.disconnect(); }
-      }, { threshold: 0.3 });
-      var g = document.getElementById('stats-grid');
-      if (g) obs.observe(g);
-    })();
-
-    // ── 6. Smooth scroll ──
-    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
-      a.addEventListener('click', function (e) {
-        var t = document.querySelector(a.getAttribute('href'));
-        if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-      });
-    });
-
-    // ── 7. Registro ──
-    function handleRegistro(e) {
-      e.preventDefault();
-      var msg = document.getElementById('registro-msg');
-      msg.textContent = '¡Solicitud enviada! Te contactamos pronto.';
-      msg.style.opacity = '1';
-      e.target.reset();
-      setTimeout(function () { msg.style.opacity = '0'; }, 5000);
-    }
-
-    // ══ LAYOUT PRELOADER (GSAP) ══
-    (function () {
-      var preloader = document.getElementById('preloader');
-      var wrap      = document.getElementById('pl-wrap');
-      var title     = document.getElementById('pl-title');
-      var main      = document.getElementById('pl-main');
-      var topImgs   = document.querySelectorAll('#pl-top img, #pl-bottom img');
-
-      document.body.style.overflow = 'hidden';
-
-      var tl = gsap.timeline({
-        onComplete: function () { document.body.style.overflow = ''; }
-      });
-
-      // 0 → 0.3s: title fades in (white on gray, edges only visible past image)
-      tl.to(title, { opacity: 1, duration: 0.4, ease: 'power2.out' }, 0);
-
-      // 0.1 → 0.8s: two-row image clip-reveals (top from top, bottom from bottom)
-      tl.fromTo('#pl-top',
-        { clipPath: 'inset(0 0 100% 0)' },
-        { clipPath: 'inset(0 0 0% 0)', duration: 0.6, ease: 'power3.out' },
-        0.15
-      );
-      tl.fromTo('#pl-bottom',
-        { clipPath: 'inset(100% 0 0 0)' },
-        { clipPath: 'inset(0% 0 0 0)', duration: 0.6, ease: 'power3.out' },
-        0.25
-      );
-
-      // Dezoom images simultaneously
-      tl.to(topImgs, { scale: 1, duration: 1.0, ease: 'power2.out' }, 0.15);
-
-      // 0.8 → 1.3s: main image crossfades over the two rows
-      tl.to(main, { opacity: 1, duration: 0.55, ease: 'power2.inOut' }, 0.8);
-
-      // 1.3 → 2.5s: image expands to fullscreen, corners straighten
-      tl.to(wrap, {
-        width: '100vw', height: '100vh', borderRadius: 0,
-        duration: 1.2, ease: 'power3.inOut'
-      }, 1.3);
-
-      // Gray bg fades to dark as image fills screen
-      tl.to(preloader, {
-        backgroundColor: '#060608',
-        duration: 0.8, ease: 'power2.inOut'
-      }, 1.6);
-
-      // Title fades out as image covers it
-      tl.to(title, { opacity: 0, duration: 0.4, ease: 'power2.in' }, 1.5);
-
-      // 2.5 → 3.2s: preloader slides up, hero is revealed underneath
-      tl.to(preloader, {
-        yPercent: -100,
-        duration: 0.75, ease: 'power3.inOut',
-        onComplete: function () {
-          preloader.style.display = 'none';
-          // Fade in hero title + coords
-          gsap.to('#hero-title', { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' });
-          gsap.to('#hero-coords', { opacity: 1, duration: 0.7, delay: 0.3, ease: 'power2.out' });
-        }
-      }, 2.55);
-    })();
-  </script>
-
-  <!-- ── Tweaks panel ── -->
   <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
@@ -813,5 +453,3 @@
 
 </body>
 </html>
-
-
