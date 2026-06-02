@@ -5,11 +5,11 @@
 /* ── Body background ── */
 body {
   background-color: #050608;
-  background-image: linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.3)), url('bg-waves.png');
-  background-size: cover, cover;
-  background-position: center, center;
-  background-repeat: no-repeat, no-repeat;
-  background-attachment: fixed, fixed;
+  background-image: url('topo-bg.jpg');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 .liquid-glass {
