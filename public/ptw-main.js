@@ -231,13 +231,18 @@ function handleRegistro(e) {
   var tl = gsap.timeline();
   tl.timeScale(0.88);
 
-  // Card 1: vanish fade-in
-  tl.to('#pl-card-1', { opacity: 1, filter: 'blur(0px)', duration: 0.9, ease: 'power2.out' }, 0.2);
+  // Card 1: fade-in (hacerla visible primero, luego animar)
+  tl.set('#pl-card-1', { opacity: 0 }, 0.18);
+  tl.to('#pl-card-1',  { opacity: 1, filter: 'blur(0px)', duration: 0.9, ease: 'power2.out' }, 0.2);
 
-  // Cards 2-6: misma velocidad, intervalos que se achican → overlap creciente
-  // Intervalos: 0.52 → 0.40 → 0.30 → 0.20  (la última ya sale antes que la anterior llegue al top)
+  // Cards 2-6: hacerlas visibles justo antes de que suban, sin tocar yPercent
   var DUR = 0.62;
   var c2  = 1.35;
+  tl.set('#pl-card-2', { opacity: 1 }, c2 - 0.05);
+  tl.set('#pl-card-3', { opacity: 1 }, c2 + 0.47);
+  tl.set('#pl-card-4', { opacity: 1 }, c2 + 0.87);
+  tl.set('#pl-card-5', { opacity: 1 }, c2 + 1.17);
+  tl.set('#pl-card-6', { opacity: 1 }, c2 + 1.37);
   tl.to('#pl-card-2', { yPercent: 0, duration: DUR, ease: 'power4.out' }, c2);
   tl.to('#pl-card-3', { yPercent: 0, duration: DUR, ease: 'power4.out' }, c2 + 0.52);
   tl.to('#pl-card-4', { yPercent: 0, duration: DUR, ease: 'power4.out' }, c2 + 0.92);
@@ -252,6 +257,7 @@ function handleRegistro(e) {
   // Build hero over fullscreen stage
   tl.to('#site-header',     { opacity: 1, duration: 0.55, ease: 'power2.out' }, 4.95);
   tl.to('#pl-hero-location',{ opacity: 1, duration: 0.45, ease: 'power2.out' }, 5.15);
+  tl.set('#pl-hero-title',  { opacity: 1 }, 5.30);  // visible antes de que suban las palabras
   tl.to('.tl-word',         { yPercent: 0, duration: 0.88, ease: 'power4.out' }, 5.35);
   tl.to('#pl-hero-coords',  { yPercent: 0, duration: 0.65, ease: 'power4.out' }, 5.9);
   tl.to('#pl-hero-brand',   { opacity: 1, duration: 0.4,  ease: 'power2.out' }, 5.95);
