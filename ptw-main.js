@@ -239,8 +239,8 @@ function initTechLetterSwap() {
     if (busy) return;
     busy = true;
 
-    var TOTAL   = 1300;  // total ms until all letters settled
-    var STAGGER = 180;   // ms between each letter locking in
+    var TOTAL   = 650;   // total ms until all letters settled
+    var STAGGER = 90;    // ms between each letter locking in
     var TICK    = 45;    // scramble refresh interval
 
     // Random resolve order — different every hover
