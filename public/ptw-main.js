@@ -218,6 +218,9 @@ function initTechLetterSwap() {
   words.forEach(function (w) { if (w.textContent.trim() === 'TECH') techWord = w; });
   if (!techWord || typeof gsap === 'undefined') return;
 
+  // Enable hover (parent #pl-hero-title has pointer-events:none)
+  techWord.style.pointerEvents = 'auto';
+
   var chars = 'TECH'.split('');
   techWord.textContent = '';
   techWord.style.display = 'inline-flex';
