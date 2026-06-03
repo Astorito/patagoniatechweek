@@ -47,6 +47,10 @@ body {
 #pl-card-1{z-index:1} #pl-card-2{z-index:2} #pl-card-3{z-index:3}
 #pl-card-4{z-index:4} #pl-card-5{z-index:5} #pl-card-6{z-index:6}
 
+/* ── Pre-apply GSAP initial states → evita flash antes de que cargue JS ── */
+#pl-card-1 { opacity: 0; filter: blur(10px); }
+#pl-card-2, #pl-card-3, #pl-card-4, #pl-card-5, #pl-card-6 { transform: translateY(100%); }
+
 #pl-overlay {
   position: absolute; inset: 0; z-index: 6; pointer-events: none; opacity: 0;
   background:
@@ -65,6 +69,7 @@ body {
   font-weight: 700; color: rgba(255,255,255,0.88);
   text-transform: uppercase; letter-spacing: -0.015em;
   will-change: transform;
+  transform: translateY(108%); /* estado inicial pre-GSAP → clipeado por .tl-clip */
 }
 
 #pl-hero-location {
@@ -81,6 +86,7 @@ body {
   font-size: clamp(9px, 0.72vw, 11px); font-weight: 600;
   color: rgba(255,255,255,0.55); letter-spacing: 0.22em; text-transform: uppercase;
   white-space: nowrap; display: block; will-change: transform;
+  transform: translateY(115%); /* clipeado por #pl-coords-wrap overflow:hidden */
 }
 
 #pl-hero-brand {
