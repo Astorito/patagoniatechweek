@@ -211,57 +211,6 @@ function handleRegistro(e) {
 }
 
 
-// ── 8. Wave effect on "TECH" ─────────────────────────────────────────────────
-function initTechLetterSwap() {
-  var words = document.querySelectorAll('.tl-word');
-  var techWord = null;
-  words.forEach(function (w) { if (w.textContent.trim() === 'TECH') techWord = w; });
-  if (!techWord || typeof gsap === 'undefined') return;
-
-  // Enable hover (parent has pointer-events:none)
-  techWord.style.pointerEvents = 'auto';
-
-  // Split into individual letter spans
-  var chars = 'TECH'.split('');
-  techWord.textContent = '';
-  techWord.style.display = 'inline-flex';
-
-  var spans = chars.map(function (ch) {
-    var sp = document.createElement('span');
-    sp.textContent = ch;
-    sp.style.display = 'inline-block';
-    techWord.appendChild(sp);
-    return sp;
-  });
-
-  techWord.addEventListener('mouseenter', function () {
-    spans.forEach(function (sp, i) {
-      gsap.to(sp, {
-        y: -10,
-        scale: 1.2,
-        duration: 0.45,
-        ease: 'back.out(2)',
-        delay: i * 0.03,
-        overwrite: true,
-      });
-    });
-  });
-
-  techWord.addEventListener('mouseleave', function () {
-    spans.forEach(function (sp, i) {
-      gsap.to(sp, {
-        y: 0,
-        scale: 1,
-        duration: 0.45,
-        ease: 'back.out(2)',
-        delay: i * 0.03,
-        overwrite: true,
-      });
-    });
-  });
-}
-
-
 // ── 7. GSAP Preloader ────────────────────────────────────────────────────────
 (function () {
   var preloader = document.getElementById('preloader');
@@ -285,13 +234,15 @@ function initTechLetterSwap() {
   // Card 1: vanish fade-in
   tl.to('#pl-card-1', { opacity: 1, filter: 'blur(0px)', duration: 0.9, ease: 'power2.out' }, 0.2);
 
-  // Cards 2-6: physics slide-up
-  var c2 = 1.35;
-  tl.to('#pl-card-2', { yPercent: 0, duration: 0.80, ease: 'power4.out' }, c2);
-  tl.to('#pl-card-3', { yPercent: 0, duration: 0.70, ease: 'power4.out' }, c2 + 0.46);
-  tl.to('#pl-card-4', { yPercent: 0, duration: 0.60, ease: 'power4.out' }, c2 + 0.86);
-  tl.to('#pl-card-5', { yPercent: 0, duration: 0.50, ease: 'power4.out' }, c2 + 1.20);
-  tl.to('#pl-card-6', { yPercent: 0, duration: 0.38, ease: 'power4.out' }, c2 + 1.48);
+  // Cards 2-6: misma velocidad, intervalos que se achican → overlap creciente
+  // Intervalos: 0.52 → 0.40 → 0.30 → 0.20  (la última ya sale antes que la anterior llegue al top)
+  var DUR = 0.62;
+  var c2  = 1.35;
+  tl.to('#pl-card-2', { yPercent: 0, duration: DUR, ease: 'power4.out' }, c2);
+  tl.to('#pl-card-3', { yPercent: 0, duration: DUR, ease: 'power4.out' }, c2 + 0.52);
+  tl.to('#pl-card-4', { yPercent: 0, duration: DUR, ease: 'power4.out' }, c2 + 0.92);
+  tl.to('#pl-card-5', { yPercent: 0, duration: DUR, ease: 'power4.out' }, c2 + 1.22);
+  tl.to('#pl-card-6', { yPercent: 0, duration: DUR, ease: 'power4.out' }, c2 + 1.42);
 
   // Expand stage to fullscreen
   tl.to(stage, { width: '100vw', height: '100vh', borderRadius: 0, boxShadow: 'none', duration: 1.1, ease: 'power3.inOut' }, 3.4);
@@ -314,6 +265,5 @@ function initTechLetterSwap() {
     document.body.style.overflow = '';
     gsap.set('#site-header', { zIndex: 50, clearProps: 'opacity' });
     document.getElementById('site-header').classList.add('visible');
-    initTechLetterSwap();
   }, [], 7.0);
 })();
