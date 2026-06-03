@@ -211,71 +211,52 @@ function handleRegistro(e) {
 }
 
 
-// ── 8. Letter swap on "TECH" (random stagger, loops on hover) ───────────────
+// ── 8. Wave effect on "TECH" ─────────────────────────────────────────────────
 function initTechLetterSwap() {
   var words = document.querySelectorAll('.tl-word');
   var techWord = null;
   words.forEach(function (w) { if (w.textContent.trim() === 'TECH') techWord = w; });
   if (!techWord || typeof gsap === 'undefined') return;
 
-  // Enable hover (parent #pl-hero-title has pointer-events:none)
+  // Enable hover (parent has pointer-events:none)
   techWord.style.pointerEvents = 'auto';
 
+  // Split into individual letter spans
   var chars = 'TECH'.split('');
   techWord.textContent = '';
   techWord.style.display = 'inline-flex';
-  techWord.style.cursor  = 'default';
 
-  // Build letter pairs: [primary visible] + [secondary hidden above]
-  var pairs = chars.map(function (ch) {
-    var wrap = document.createElement('span');
-    wrap.style.cssText = 'position:relative; display:inline-flex; overflow:hidden; line-height:inherit;';
-
-    var primary = document.createElement('span');
-    primary.textContent = ch;
-    primary.style.display = 'block';
-
-    var secondary = document.createElement('span');
-    secondary.textContent = ch;
-    secondary.setAttribute('aria-hidden', 'true');
-    secondary.style.cssText = 'position:absolute; left:0; top:-105%; width:100%;';
-
-    wrap.appendChild(primary);
-    wrap.appendChild(secondary);
-    techWord.appendChild(wrap);
-    return { p: primary, s: secondary };
+  var spans = chars.map(function (ch) {
+    var sp = document.createElement('span');
+    sp.textContent = ch;
+    sp.style.display = 'inline-block';
+    techWord.appendChild(sp);
+    return sp;
   });
 
-  var busy = false;
-
   techWord.addEventListener('mouseenter', function () {
-    if (busy) return;
-    busy = true;
+    spans.forEach(function (sp, i) {
+      gsap.to(sp, {
+        y: -10,
+        scale: 1.2,
+        duration: 0.45,
+        ease: 'back.out(2)',
+        delay: i * 0.03,
+        overwrite: true,
+      });
+    });
+  });
 
-    // New random order every hover
-    var order = [0, 1, 2, 3].sort(function () { return Math.random() - 0.5; });
-    var stagger = 0.055;
-
-    order.forEach(function (idx, i) {
-      var delay = i * stagger;
-      var pair  = pairs[idx];
-      var isLast = i === order.length - 1;
-
-      // Primary flies out upward
-      gsap.to(pair.p, { y: '-105%', duration: 0.38, ease: 'power3.in', delay: delay });
-
-      // Secondary slides in from below
-      gsap.fromTo(pair.s,
-        { top: '105%' },
-        {
-          top: '0%', duration: 0.38, ease: 'power3.out', delay: delay,
-          onComplete: function () {
-            gsap.set(pair.p, { y: 0 });
-            gsap.set(pair.s, { top: '-105%' });
-            if (isLast) busy = false;
-          }
-        }
-      );
+  techWord.addEventListener('mouseleave', function () {
+    spans.forEach(function (sp, i) {
+      gsap.to(sp, {
+        y: 0,
+        scale: 1,
+        duration: 0.45,
+        ease: 'back.out(2)',
+        delay: i * 0.03,
+        overwrite: true,
+      });
     });
   });
 }
