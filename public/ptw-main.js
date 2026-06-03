@@ -211,72 +211,67 @@ function handleRegistro(e) {
 }
 
 
-// ── 8. Letter swap on "TECH" (random stagger, loops on hover) ───────────────
+// ── 8. Scramble effect on "TECH" ─────────────────────────────────────────────
 function initTechLetterSwap() {
   var words = document.querySelectorAll('.tl-word');
   var techWord = null;
   words.forEach(function (w) { if (w.textContent.trim() === 'TECH') techWord = w; });
-  if (!techWord || typeof gsap === 'undefined') return;
+  if (!techWord) return;
 
-  // Enable hover (parent #pl-hero-title has pointer-events:none)
+  // Enable hover (parent has pointer-events:none)
   techWord.style.pointerEvents = 'auto';
 
-  var chars = 'TECH'.split('');
+  var original = ['T', 'E', 'C', 'H'];
+  var pool     = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  var busy     = false;
+
+  // One span per letter
   techWord.textContent = '';
   techWord.style.display = 'inline-flex';
-  techWord.style.cursor  = 'default';
-
-  // Build letter pairs: [primary visible] + [secondary hidden above]
-  var pairs = chars.map(function (ch) {
-    var wrap = document.createElement('span');
-    wrap.style.cssText = 'position:relative; display:inline-flex; overflow:hidden; line-height:inherit;';
-
-    var primary = document.createElement('span');
-    primary.textContent = ch;
-    primary.style.display = 'block';
-
-    var secondary = document.createElement('span');
-    secondary.textContent = ch;
-    secondary.setAttribute('aria-hidden', 'true');
-    secondary.style.cssText = 'position:absolute; left:0; top:-105%; width:100%;';
-
-    wrap.appendChild(primary);
-    wrap.appendChild(secondary);
-    techWord.appendChild(wrap);
-    return { p: primary, s: secondary };
+  var spans = original.map(function (ch) {
+    var sp = document.createElement('span');
+    sp.textContent = ch;
+    techWord.appendChild(sp);
+    return sp;
   });
-
-  var busy = false;
 
   techWord.addEventListener('mouseenter', function () {
     if (busy) return;
     busy = true;
 
-    // New random order every hover
-    var order = [0, 1, 2, 3].sort(function () { return Math.random() - 0.5; });
-    var stagger = 0.055;
+    var TOTAL   = 1300;  // total ms until all letters settled
+    var STAGGER = 180;   // ms between each letter locking in
+    var TICK    = 45;    // scramble refresh interval
 
-    order.forEach(function (idx, i) {
-      var delay = i * stagger;
-      var pair  = pairs[idx];
-      var isLast = i === order.length - 1;
+    // Random resolve order — different every hover
+    var order    = [0, 1, 2, 3].sort(function () { return Math.random() - 0.5; });
+    var resolved = [false, false, false, false];
+    var start    = performance.now();
 
-      // Primary flies out upward
-      gsap.to(pair.p, { y: '-105%', duration: 0.38, ease: 'power3.in', delay: delay });
+    var timer = setInterval(function () {
+      var elapsed = performance.now() - start;
 
-      // Secondary slides in from below
-      gsap.fromTo(pair.s,
-        { top: '105%' },
-        {
-          top: '0%', duration: 0.38, ease: 'power3.out', delay: delay,
-          onComplete: function () {
-            gsap.set(pair.p, { y: 0 });
-            gsap.set(pair.s, { top: '-105%' });
-            if (isLast) busy = false;
-          }
+      // Lock letters one by one as their time arrives
+      order.forEach(function (idx, pos) {
+        var lockAt = TOTAL - STAGGER * (order.length - 1 - pos);
+        if (!resolved[idx] && elapsed >= lockAt) {
+          resolved[idx] = true;
+          spans[idx].textContent = original[idx];
         }
-      );
-    });
+      });
+
+      // Scramble all pending letters with random chars
+      spans.forEach(function (sp, i) {
+        if (!resolved[i]) {
+          sp.textContent = pool[Math.floor(Math.random() * pool.length)];
+        }
+      });
+
+      if (resolved.every(Boolean)) {
+        clearInterval(timer);
+        busy = false;
+      }
+    }, TICK);
   });
 }
 
