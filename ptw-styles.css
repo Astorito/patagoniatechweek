@@ -189,7 +189,7 @@ body {
 
 /* ── Click-to-dismiss cards ── */
 .click-card {
-  position: absolute; width: 360px; height: 270px;
+  position: absolute; width: 504px; height: 378px;
   border-radius: 14px; overflow: hidden;
   box-shadow: 0 20px 56px rgba(0,0,0,0.6);
   will-change: transform, opacity;
@@ -418,8 +418,8 @@ body {
   #pl-hero-brand { display: none; }
 
   /* Sede card stack */
-  #sede-stack { width: 280px !important; height: 210px !important; }
-  .click-card { width: 260px !important; height: 195px !important; }
+  #sede-stack { width: 392px !important; height: 294px !important; }
+  .click-card { width: 364px !important; height: 273px !important; }
 
   /* Actividades — vertical on mobile */
   .strips-container {
@@ -444,8 +444,8 @@ body {
   /* Very small phones */
   .speaker-grid { grid-template-columns: 1fr; }
   #pl-hero-card { display: none; }
-  #sede-stack   { width: 250px !important; height: 188px !important; }
-  .click-card   { width: 232px !important; height: 174px !important; }
+  #sede-stack   { width: 350px !important; height: 263px !important; }
+  .click-card   { width: 325px !important; height: 244px !important; }
   .sponsor-logo-box.silver { width: calc(50% - 0.44rem); }
 
   /* Simplify header nav on tiny screens */

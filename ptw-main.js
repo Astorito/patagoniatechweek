@@ -212,6 +212,146 @@ function handleRegistro(e) {
 
 
 
+// ── 8. TECH canvas topo effect ───────────────────────────────────────────────
+// Clean sine-wave contour lines drawn on <canvas> and clipped to letter shapes
+// via canvas destination-in composite. No SVG filters, no noise/dots.
+function initTechGeo() {
+  var words = document.querySelectorAll('.tl-word');
+  var techWord = null;
+  words.forEach(function (w) { if (w.textContent.trim() === 'TECH') techWord = w; });
+  if (!techWord) return;
+
+  var cs   = window.getComputedStyle(techWord);
+  var fontSize = parseFloat(cs.fontSize);
+  var ls   = parseFloat(cs.letterSpacing) || 0; // negative px value
+
+  // Measure rendered dimensions
+  var probe = document.createElement('span');
+  probe.style.cssText = 'position:fixed;top:-9999px;left:0;visibility:hidden;pointer-events:none;' +
+    'font-family:"Hanken Grotesk",sans-serif;font-size:' + fontSize + 'px;' +
+    'font-weight:700;letter-spacing:' + ls + 'px;white-space:nowrap;line-height:1;';
+  probe.textContent = 'TECH';
+  document.body.appendChild(probe);
+  var W  = probe.offsetWidth;
+  var H  = probe.offsetHeight;
+  document.body.removeChild(probe);
+
+  var BL   = H * 0.80;          // baseline (Hanken Grotesk 700 ≈ 80%)
+  var FONT = '700 ' + fontSize + 'px "Hanken Grotesk"';
+
+  // ── Canvas ────────────────────────────────────────────────────────────────
+  var canvas = document.createElement('canvas');
+  canvas.width  = Math.ceil(W);
+  canvas.height = Math.ceil(H);
+  canvas.style.cssText = 'display:block;';
+
+  techWord.textContent = '';
+  techWord.appendChild(canvas);
+
+  var ctx = canvas.getContext('2d');
+  ctx.font = FONT;
+  ctx.textBaseline = 'alphabetic';
+  if ('letterSpacing' in ctx) ctx.letterSpacing = ls + 'px';
+
+  // ── Topo line definitions (generated once) ───────────────────────────────
+  var N = 16; // number of contour lines
+  var rng = (function () { var s = 42; return function () { s = (s * 1664525 + 1013904223) & 0xffffffff; return (s >>> 0) / 0xffffffff; }; })();
+  var lines = [];
+  for (var i = 0; i < N; i++) {
+    var t = i / (N - 1);
+    lines.push({
+      y:     H * (0.06 + 0.88 * t),         // base y position across full height
+      a1:    H * (0.030 + rng() * 0.025),    // primary amplitude ~3-5.5% of H
+      c1:    2.2 + rng() * 2.0,              // primary cycles across W (2-4)
+      o1:    rng() * Math.PI * 2,            // random phase offset
+      sp1:   0.10 + rng() * 0.12,           // drift speed (rad/s)
+      a2:    H * (0.012 + rng() * 0.015),   // secondary amplitude ~1-2.5%
+      c2:    5.0 + rng() * 4.0,              // secondary cycles (5-9)
+      o2:    rng() * Math.PI * 2,
+      sp2:   0.06 + rng() * 0.08,
+    });
+  }
+
+  // ── Scan line state ──────────────────────────────────────────────────────
+  var scan = { active: false, x: -1, op: 0 };
+  var SCAN_DELAY = 10000;
+  var SCAN_DUR   = 2000;
+  var BEAM_W     = Math.round(fontSize * 0.55);
+
+  function easeInOut3(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
+
+  function runScan() {
+    var start = performance.now();
+    scan.active = true;
+    function step(now) {
+      var t = Math.min(1, (now - start) / SCAN_DUR);
+      scan.x  = -BEAM_W + (W + BEAM_W * 2) * easeInOut3(t);
+      scan.op = t < 0.08 ? t / 0.08 : t > 0.92 ? (1 - t) / 0.08 : 1;
+      if (t < 1) { requestAnimationFrame(step); }
+      else { scan.active = false; scan.op = 0; setTimeout(runScan, SCAN_DELAY); }
+    }
+    requestAnimationFrame(step);
+  }
+  setTimeout(runScan, SCAN_DELAY);
+
+  // ── Draw loop ─────────────────────────────────────────────────────────────
+  var t0 = performance.now();
+
+  function draw(now) {
+    var t = (now - t0) / 1000;
+
+    ctx.clearRect(0, 0, W, H);
+
+    // 1. Topo contour lines (across full canvas — gets clipped to letters below)
+    for (var i = 0; i < N; i++) {
+      var ln = lines[i];
+      // Opacity varies slightly by "elevation" for depth
+      var op = 0.50 + 0.28 * Math.sin(i / N * Math.PI);
+      ctx.strokeStyle = 'rgba(200,225,255,' + op.toFixed(2) + ')';
+      ctx.lineWidth   = 0.85;
+      ctx.beginPath();
+      var step = 2;
+      for (var x = 0; x <= W; x += step) {
+        var px = x / W;
+        var wy = ln.y
+          + ln.a1 * Math.sin(ln.c1 * Math.PI * 2 * px + ln.o1 + t * ln.sp1)
+          + ln.a2 * Math.sin(ln.c2 * Math.PI * 2 * px + ln.o2 + t * ln.sp2);
+        if (x === 0) ctx.moveTo(x, wy); else ctx.lineTo(x, wy);
+      }
+      ctx.stroke();
+    }
+
+    // 2. Scan beam (drawn before clip so it's masked to letters)
+    if (scan.active && scan.op > 0) {
+      var grad = ctx.createLinearGradient(scan.x - BEAM_W / 2, 0, scan.x + BEAM_W / 2, 0);
+      grad.addColorStop(0,   'rgba(255,255,255,0)');
+      grad.addColorStop(0.4, 'rgba(255,255,255,' + (scan.op * 0.55).toFixed(3) + ')');
+      grad.addColorStop(0.6, 'rgba(255,255,255,' + (scan.op * 0.55).toFixed(3) + ')');
+      grad.addColorStop(1,   'rgba(255,255,255,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    // 3. Clip everything drawn so far to the TECH letter shapes
+    ctx.globalCompositeOperation = 'destination-in';
+    ctx.fillStyle = 'white';
+    ctx.fillText('TECH', 0, BL);
+    ctx.globalCompositeOperation = 'source-over';
+
+    // 4. Letter outlines — thin stroke on top of the clipped content
+    ctx.strokeStyle = 'rgba(255,255,255,0.86)';
+    ctx.lineWidth   = 1.3;
+    ctx.lineJoin    = 'round';
+    ctx.strokeText('TECH', 0, BL);
+
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+}
+
+// Init as soon as fonts are ready — before GSAP fly-up so TECH is already hollow
+document.fonts.ready.then(function () { initTechGeo(); });
+
 // ── 7. GSAP Preloader ────────────────────────────────────────────────────────
 (function () {
   var preloader = document.getElementById('preloader');
