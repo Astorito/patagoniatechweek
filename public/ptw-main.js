@@ -211,6 +211,204 @@ function handleRegistro(e) {
 }
 
 
+// ── 8. TECH geographic visualization ─────────────────────────────────────────
+function initTechGeo() {
+  var words = document.querySelectorAll('.tl-word');
+  var techWord = null;
+  words.forEach(function (w) { if (w.textContent.trim() === 'TECH') techWord = w; });
+  if (!techWord) return;
+
+  var ns = 'http://www.w3.org/2000/svg';
+  var cs = window.getComputedStyle(techWord);
+  var fontSize = parseFloat(cs.fontSize);
+  var ls = parseFloat(cs.letterSpacing) || 0; // computed px value
+
+  // Measure exact rendered text width/height at current font size
+  var probe = document.createElement('span');
+  probe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;visibility:hidden;' +
+    'font-family:"Hanken Grotesk",sans-serif;font-size:' + fontSize + 'px;' +
+    'font-weight:700;letter-spacing:' + ls + 'px;white-space:nowrap;line-height:1;';
+  probe.textContent = 'TECH';
+  document.body.appendChild(probe);
+  var W  = probe.offsetWidth;
+  var H  = probe.offsetHeight;
+  document.body.removeChild(probe);
+
+  // Hanken Grotesk 700: baseline sits ~79% from the top of the em-box
+  var BL  = H * 0.79;
+  var BW  = Math.round(fontSize * 0.48); // scan beam width
+
+  function mk(tag, attrs) {
+    var e = document.createElementNS(ns, tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+    return e;
+  }
+
+  // ── SVG container ─────────────────────────────────────────────────────────
+  var svg = mk('svg', { width: W, height: H, viewBox: '0 0 ' + W + ' ' + H });
+  svg.style.cssText = 'display:block;overflow:visible;';
+
+  var defs = mk('defs', {});
+  svg.appendChild(defs);
+
+  // ── Clip path: TECH letter shapes ─────────────────────────────────────────
+  var clip = mk('clipPath', { id: 'tg-clip' });
+  var clipTxt = mk('text', {
+    x: 0, y: BL,
+    'font-family': '"Hanken Grotesk", sans-serif',
+    'font-size': fontSize,
+    'font-weight': '700',
+    'letter-spacing': ls
+  });
+  clipTxt.textContent = 'TECH';
+  clip.appendChild(clipTxt);
+  defs.appendChild(clip);
+
+  // ── Topo contour filter ───────────────────────────────────────────────────
+  // Chain: feTurbulence (stitch) → feTile → feOffset(dx animated) →
+  //        desaturate → discrete posterize → edge detect → contrast/blue boost
+  var fTopo = mk('filter', {
+    id: 'tg-topo', x: '0', y: '0', width: '1', height: '1',
+    'color-interpolation-filters': 'sRGB'
+  });
+
+  // Noise — stitchTiles makes it seamlessly tileable at element bbox (W×H)
+  fTopo.appendChild(mk('feTurbulence', {
+    type: 'fractalNoise', baseFrequency: '0.0072 0.0105',
+    numOctaves: '6', seed: '14', stitchTiles: 'stitch', result: 'raw'
+  }));
+
+  // Tile the seamless noise infinitely in all directions
+  fTopo.appendChild(mk('feTile', { in: 'raw', result: 'tiled' }));
+
+  // Animate dx from 0 → -W: one seamless period = perfectly loop-able
+  var feOff = mk('feOffset', { in: 'tiled', dx: '0', dy: '0', result: 'shifted' });
+  var driftAnim = mk('animate', {
+    attributeName: 'dx',
+    from: '0',
+    to: String(-W),
+    dur: '40s',
+    repeatCount: 'indefinite'
+  });
+  feOff.appendChild(driftAnim);
+  fTopo.appendChild(feOff);
+
+  // Desaturate → pure luminance
+  fTopo.appendChild(mk('feColorMatrix', { type: 'saturate', values: '0', in: 'shifted', result: 'g' }));
+
+  // Discrete posterize: creates visible contour bands
+  var xfer = mk('feComponentTransfer', { in: 'g', result: 'b' });
+  var tv = '0 0.09 0 0.09 0 0.09 0 0.09 0 0.09 0 0.09 0 0.09 0 0.09 ' +
+           '0 0.09 0 0.09 0 0.09 0 0.09 0 0.09 0 0.09 0 0.09 0 0.09';
+  ['feFuncR', 'feFuncG', 'feFuncB'].forEach(function (tag) {
+    xfer.appendChild(mk(tag, { type: 'discrete', tableValues: tv }));
+  });
+  fTopo.appendChild(xfer);
+
+  // 3×3 Laplacian edge-detect: turns band edges into contour lines
+  fTopo.appendChild(mk('feConvolveMatrix', {
+    order: '3', kernelMatrix: '-1 -1 -1 -1 8 -1 -1 -1 -1',
+    in: 'b', result: 'e', edgeMode: 'wrap'
+  }));
+
+  // Boost contrast + slight cool tint (more B channel)
+  fTopo.appendChild(mk('feColorMatrix', {
+    type: 'matrix',
+    values: '7 0 0 0 -0.32  7 0 0 0 -0.28  10 0 0 0 -0.20  0 0 0 30 -5.5',
+    in: 'e'
+  }));
+  defs.appendChild(fTopo);
+
+  // ── Inner glow filter ─────────────────────────────────────────────────────
+  var fGlow = mk('filter', { id: 'tg-glow', x: '-40%', y: '-40%', width: '180%', height: '180%' });
+  fGlow.appendChild(mk('feGaussianBlur', { stdDeviation: Math.max(3, Math.round(fontSize * 0.038)) }));
+  defs.appendChild(fGlow);
+
+  // ── Scan beam gradient ────────────────────────────────────────────────────
+  var scanGrad = mk('linearGradient', { id: 'tg-scan', x1: '0', y1: '0', x2: '1', y2: '0' });
+  [['0%','0'],['15%','0.55'],['50%','1'],['85%','0.55'],['100%','0']].forEach(function (s) {
+    scanGrad.appendChild(mk('stop', { offset: s[0], 'stop-color': 'white', 'stop-opacity': s[1] }));
+  });
+  defs.appendChild(scanGrad);
+
+  // ── Visual layers (back to front) ─────────────────────────────────────────
+
+  // 1. Soft inner glow — blurred fill, gives letters a lit-from-within feel
+  var glowTxt = mk('text', {
+    x: 0, y: BL,
+    'font-family': '"Hanken Grotesk", sans-serif',
+    'font-size': fontSize, 'font-weight': '700', 'letter-spacing': ls,
+    fill: 'rgba(185,215,255,0.11)',
+    filter: 'url(#tg-glow)'
+  });
+  glowTxt.textContent = 'TECH';
+  svg.appendChild(glowTxt);
+
+  // 2. Clipped group: topo lines + scan beam — both masked to letter shapes
+  var clipGrp = mk('g', { 'clip-path': 'url(#tg-clip)' });
+
+  var topoRect = mk('rect', {
+    x: 0, y: 0, width: W, height: H,
+    fill: 'rgba(215,232,255,1)',
+    filter: 'url(#tg-topo)'
+  });
+  topoRect.style.opacity = '0.26';
+  clipGrp.appendChild(topoRect);
+
+  var scanBeam = mk('rect', { x: -BW, y: 0, width: BW, height: H, fill: 'url(#tg-scan)' });
+  scanBeam.style.opacity = '0';
+  clipGrp.appendChild(scanBeam);
+
+  svg.appendChild(clipGrp);
+
+  // 3. Letter outlines — stroke only, no fill = transparent letters with clean edge
+  var outTxt = mk('text', {
+    x: 0, y: BL,
+    'font-family': '"Hanken Grotesk", sans-serif',
+    'font-size': fontSize, 'font-weight': '700', 'letter-spacing': ls,
+    fill: 'none',
+    stroke: 'rgba(255,255,255,0.86)',
+    'stroke-width': '1.3',
+    'paint-order': 'stroke fill'
+  });
+  outTxt.textContent = 'TECH';
+  svg.appendChild(outTxt);
+
+  // ── Replace TECH word content with SVG ────────────────────────────────────
+  techWord.textContent = '';
+  techWord.appendChild(svg);
+
+  // ── Scan line animation: sweeps left→right every ~10s ────────────────────
+  var SCAN_DELAY = 10000;
+  var SCAN_DUR   = 1900;
+
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  function runScan() {
+    var start  = performance.now();
+    var travel = W + BW * 2;
+    function step(now) {
+      var t  = Math.min(1, (now - start) / SCAN_DUR);
+      var e  = easeInOutCubic(t);
+      scanBeam.setAttribute('x', (-BW + travel * e).toFixed(1));
+      var op = t < 0.08 ? t / 0.08 : t > 0.92 ? (1 - t) / 0.08 : 1;
+      scanBeam.style.opacity  = (op * 0.48).toFixed(3);
+      topoRect.style.opacity  = (0.26 + op * 0.18).toFixed(3);
+      if (t < 1) {
+        requestAnimationFrame(step);
+      } else {
+        scanBeam.style.opacity = '0';
+        topoRect.style.opacity = '0.26';
+        setTimeout(runScan, SCAN_DELAY);
+      }
+    }
+    requestAnimationFrame(step);
+  }
+  setTimeout(runScan, SCAN_DELAY);
+}
+
 // ── 7. GSAP Preloader ────────────────────────────────────────────────────────
 (function () {
   var preloader = document.getElementById('preloader');
@@ -272,5 +470,6 @@ function handleRegistro(e) {
     document.body.style.overflow = '';
     gsap.set('#site-header', { zIndex: 50, clearProps: 'opacity' });
     document.getElementById('site-header').classList.add('visible');
+    initTechGeo();
   }, [], 7.0);
 })();
