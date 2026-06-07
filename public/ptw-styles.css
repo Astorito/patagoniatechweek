@@ -234,7 +234,7 @@ body {
   mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
 }
 @keyframes marquee-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.marquee-track { display:flex; width:max-content; align-items:center; gap:3.5rem; animation: marquee-left 22s linear infinite; }
+.marquee-track { display:flex; width:max-content; align-items:center; gap:3.5rem; animation: marquee-left 40s linear infinite; }
 .marquee-track:hover { animation-play-state: paused; }
 .marquee-sep { opacity: 0.2; font-size: 1.2rem; }
 

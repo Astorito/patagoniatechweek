@@ -328,7 +328,7 @@ document.fonts.ready.then(function () { initTechGeo(); });
   gsap.set('#site-header', { zIndex: 2010, opacity: 0 });
 
   var tl = gsap.timeline();
-  tl.timeScale(0.88);
+  tl.timeScale(0.80);  // 10% más lento que antes (era 0.88)
 
   // Card 1: fade-in (hacerla visible primero, luego animar)
   tl.set('#pl-card-1', { opacity: 0 }, 0.18);
