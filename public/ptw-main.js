@@ -253,28 +253,9 @@ function initTechGeo() {
   ctx.textBaseline = 'alphabetic';
   if ('letterSpacing' in ctx) ctx.letterSpacing = ls + 'px';
 
-  // ── Topo line definitions (generated once) ───────────────────────────────
-  var N = 16; // number of contour lines
-  var rng = (function () { var s = 42; return function () { s = (s * 1664525 + 1013904223) & 0xffffffff; return (s >>> 0) / 0xffffffff; }; })();
-  var lines = [];
-  for (var i = 0; i < N; i++) {
-    var t = i / (N - 1);
-    lines.push({
-      y:     H * (0.06 + 0.88 * t),         // base y position across full height
-      a1:    H * (0.030 + rng() * 0.025),    // primary amplitude ~3-5.5% of H
-      c1:    2.2 + rng() * 2.0,              // primary cycles across W (2-4)
-      o1:    rng() * Math.PI * 2,            // random phase offset
-      sp1:   0.10 + rng() * 0.12,           // drift speed (rad/s)
-      a2:    H * (0.012 + rng() * 0.015),   // secondary amplitude ~1-2.5%
-      c2:    5.0 + rng() * 4.0,              // secondary cycles (5-9)
-      o2:    rng() * Math.PI * 2,
-      sp2:   0.06 + rng() * 0.08,
-    });
-  }
-
   // ── Scan line state ──────────────────────────────────────────────────────
   var scan = { active: false, x: -1, op: 0 };
-  var SCAN_DELAY = 10000;
+  var SCAN_DELAY = 6000;
   var SCAN_DUR   = 2000;
   var BEAM_W     = Math.round(fontSize * 0.55);
 
@@ -295,33 +276,10 @@ function initTechGeo() {
   setTimeout(runScan, SCAN_DELAY);
 
   // ── Draw loop ─────────────────────────────────────────────────────────────
-  var t0 = performance.now();
-
   function draw(now) {
-    var t = (now - t0) / 1000;
-
     ctx.clearRect(0, 0, W, H);
 
-    // 1. Topo contour lines (across full canvas — gets clipped to letters below)
-    for (var i = 0; i < N; i++) {
-      var ln = lines[i];
-      // Opacity varies slightly by "elevation" for depth
-      var op = 0.50 + 0.28 * Math.sin(i / N * Math.PI);
-      ctx.strokeStyle = 'rgba(200,225,255,' + op.toFixed(2) + ')';
-      ctx.lineWidth   = 0.85;
-      ctx.beginPath();
-      var step = 2;
-      for (var x = 0; x <= W; x += step) {
-        var px = x / W;
-        var wy = ln.y
-          + ln.a1 * Math.sin(ln.c1 * Math.PI * 2 * px + ln.o1 + t * ln.sp1)
-          + ln.a2 * Math.sin(ln.c2 * Math.PI * 2 * px + ln.o2 + t * ln.sp2);
-        if (x === 0) ctx.moveTo(x, wy); else ctx.lineTo(x, wy);
-      }
-      ctx.stroke();
-    }
-
-    // 2. Scan beam (drawn before clip so it's masked to letters)
+    // 1. Scan beam (drawn before clip so it's masked to the letter shapes)
     if (scan.active && scan.op > 0) {
       var grad = ctx.createLinearGradient(scan.x - BEAM_W / 2, 0, scan.x + BEAM_W / 2, 0);
       grad.addColorStop(0,   'rgba(255,255,255,0)');
