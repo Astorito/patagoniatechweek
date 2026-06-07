@@ -5,7 +5,7 @@
 /* ── Body background ── */
 body {
   background-color: #050608;
-  background-image: url('topo-bg.jpg');
+  background-image: url('topo-bg.svg');
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
