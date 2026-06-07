@@ -64,7 +64,7 @@ body {
 .tl-word {
   display: block;
   font-family: 'Hanken Grotesk', sans-serif;
-  font-size: clamp(58px, 10.5vw, 162px);
+  font-size: clamp(52px, 9.45vw, 146px);  /* -10% */
   font-weight: 700; color: rgba(255,255,255,0.88);
   text-transform: uppercase; letter-spacing: -0.015em;
   will-change: transform;
@@ -406,7 +406,7 @@ body {
 
   /* Preloader */
   #card-stage { width: 80vw; height: 52vh; }
-  .tl-word { font-size: clamp(44px, 12.5vw, 70px); }
+  .tl-word { font-size: clamp(40px, 11.25vw, 63px); }  /* -10% */
   #pl-hero-title { top: 33%; }
   #pl-hero-location { top: 29%; font-size: 9px; }
   #pl-hero-card {
