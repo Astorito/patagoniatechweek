@@ -337,17 +337,17 @@ document.fonts.ready.then(function () { initTechGeo(); });
   // Cards 2-6: hacerlas visibles justo antes de que suban, sin tocar yPercent
   var DUR = 0.62;
   var c2  = 1.35;
-  // Intervalos: 0.52 → 0.42 → 0.33 → 0.30  (aceleran pero sin cortar el anteúltimo)
+  // Intervalos: 0.52 → 0.42 → 0.35 → 0.32
   tl.set('#pl-card-2', { opacity: 1 }, c2 - 0.05);
   tl.set('#pl-card-3', { opacity: 1 }, c2 + 0.47);
   tl.set('#pl-card-4', { opacity: 1 }, c2 + 0.89);
-  tl.set('#pl-card-5', { opacity: 1 }, c2 + 1.17);
-  tl.set('#pl-card-6', { opacity: 1 }, c2 + 1.42);
+  tl.set('#pl-card-5', { opacity: 1 }, c2 + 1.24);
+  tl.set('#pl-card-6', { opacity: 1 }, c2 + 1.56);
   tl.to('#pl-card-2', { yPercent: 0, duration: DUR, ease: 'power4.out' }, c2);
   tl.to('#pl-card-3', { yPercent: 0, duration: DUR, ease: 'power4.out' }, c2 + 0.52);
   tl.to('#pl-card-4', { yPercent: 0, duration: DUR, ease: 'power4.out' }, c2 + 0.94);
-  tl.to('#pl-card-5', { yPercent: 0, duration: DUR, ease: 'power4.out' }, c2 + 1.22);
-  tl.to('#pl-card-6', { yPercent: 0, duration: DUR, ease: 'power4.out' }, c2 + 1.47);
+  tl.to('#pl-card-5', { yPercent: 0, duration: DUR, ease: 'power4.out' }, c2 + 1.29);
+  tl.to('#pl-card-6', { yPercent: 0, duration: DUR, ease: 'power4.out' }, c2 + 1.61);
 
   // Expand stage to fullscreen
   tl.to(stage, { width: '100vw', height: '100vh', borderRadius: 0, boxShadow: 'none', duration: 1.1, ease: 'power3.inOut' }, 3.4);
