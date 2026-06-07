@@ -281,16 +281,8 @@ function initTechGeo() {
   // Tile the seamless noise infinitely in all directions
   fTopo.appendChild(mk('feTile', { in: 'raw', result: 'tiled' }));
 
-  // Animate dx from 0 → -W: one seamless period = perfectly loop-able
+  // Offset driven by JS (more reliable than SMIL on filter primitives)
   var feOff = mk('feOffset', { in: 'tiled', dx: '0', dy: '0', result: 'shifted' });
-  var driftAnim = mk('animate', {
-    attributeName: 'dx',
-    from: '0',
-    to: String(-W),
-    dur: '40s',
-    repeatCount: 'indefinite'
-  });
-  feOff.appendChild(driftAnim);
   fTopo.appendChild(feOff);
 
   // Desaturate → pure luminance
@@ -311,10 +303,12 @@ function initTechGeo() {
     in: 'b', result: 'e', edgeMode: 'wrap'
   }));
 
-  // Boost contrast + slight cool tint (more B channel)
+  // Boost contrast + slight cool tint.
+  // KEY: alpha row uses R channel (not A) so lines are opaque, gaps transparent.
+  // Laplacian at a band edge ≈ 0.36 → A' = 22×0.36−0.5 = 7.4 → 1.  Non-edge: A'=−0.5 → 0.
   fTopo.appendChild(mk('feColorMatrix', {
     type: 'matrix',
-    values: '7 0 0 0 -0.32  7 0 0 0 -0.28  10 0 0 0 -0.20  0 0 0 30 -5.5',
+    values: '10 0 0 0 -0.5  10 0 0 0 -0.45  14 0 0 0 -0.45  22 0 0 0 -0.5',
     in: 'e'
   }));
   defs.appendChild(fTopo);
@@ -349,10 +343,10 @@ function initTechGeo() {
 
   var topoRect = mk('rect', {
     x: 0, y: 0, width: W, height: H,
-    fill: 'rgba(215,232,255,1)',
+    fill: 'white',
     filter: 'url(#tg-topo)'
   });
-  topoRect.style.opacity = '0.26';
+  topoRect.style.opacity = '0.55';
   clipGrp.appendChild(topoRect);
 
   var scanBeam = mk('rect', { x: -BW, y: 0, width: BW, height: H, fill: 'url(#tg-scan)' });
@@ -378,9 +372,26 @@ function initTechGeo() {
   techWord.textContent = '';
   techWord.appendChild(svg);
 
+  // ── Drift animation — JS updates feOffset.dx each frame (seamless at W) ──
+  var driftX = 0;
+  var lastDrift = performance.now();
+  var DRIFT_PX_S = 22; // px per second — slow geographic drift
+
+  function driftTick(now) {
+    var dt = Math.min((now - lastDrift) / 1000, 0.05); // cap at 50ms for tab-switch
+    lastDrift = now;
+    driftX -= DRIFT_PX_S * dt;
+    if (driftX <= -W) driftX += W; // seamless tile reset
+    feOff.setAttribute('dx', driftX.toFixed(2));
+    requestAnimationFrame(driftTick);
+  }
+  requestAnimationFrame(driftTick);
+
   // ── Scan line animation: sweeps left→right every ~10s ────────────────────
   var SCAN_DELAY = 10000;
   var SCAN_DUR   = 1900;
+  var TOPO_BASE  = 0.55;
+  var TOPO_BOOST = 0.20;
 
   function easeInOutCubic(t) {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -395,12 +406,12 @@ function initTechGeo() {
       scanBeam.setAttribute('x', (-BW + travel * e).toFixed(1));
       var op = t < 0.08 ? t / 0.08 : t > 0.92 ? (1 - t) / 0.08 : 1;
       scanBeam.style.opacity  = (op * 0.48).toFixed(3);
-      topoRect.style.opacity  = (0.26 + op * 0.18).toFixed(3);
+      topoRect.style.opacity  = (TOPO_BASE + op * TOPO_BOOST).toFixed(3);
       if (t < 1) {
         requestAnimationFrame(step);
       } else {
         scanBeam.style.opacity = '0';
-        topoRect.style.opacity = '0.26';
+        topoRect.style.opacity = String(TOPO_BASE);
         setTimeout(runScan, SCAN_DELAY);
       }
     }
@@ -408,6 +419,10 @@ function initTechGeo() {
   }
   setTimeout(runScan, SCAN_DELAY);
 }
+
+// Fire initTechGeo as soon as fonts are loaded — well before GSAP reveals .tl-word
+// so TECH is already hollow+topo during the fly-up animation, not filled white.
+document.fonts.ready.then(function () { initTechGeo(); });
 
 // ── 7. GSAP Preloader ────────────────────────────────────────────────────────
 (function () {
@@ -470,6 +485,5 @@ function initTechGeo() {
     document.body.style.overflow = '';
     gsap.set('#site-header', { zIndex: 50, clearProps: 'opacity' });
     document.getElementById('site-header').classList.add('visible');
-    initTechGeo();
   }, [], 7.0);
 })();
