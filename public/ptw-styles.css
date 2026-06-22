@@ -221,11 +221,7 @@ body {
 .strip:hover .strip-cta { opacity:1; transform:translateX(0); }
 
 /* ── Hero bottom fade ── */
-#hero-bottom-fade {
-  position: absolute; bottom: 0; left: 0; right: 0; height: 32vh;
-  z-index: 8; pointer-events: none;
-  background: linear-gradient(to bottom, transparent 0%, #050608 100%);
-}
+#hero-bottom-fade { display: none; }
 
 /* ── Partners marquee ── */
 .marquee-outer {
@@ -357,6 +353,24 @@ body {
   font-family: 'Open Sans', sans-serif; letter-spacing: 0.05em;
 }
 .house-meta-item .material-symbols-outlined { font-size: 13px; color: rgba(188,202,189,0.4); }
+
+/* ── Handmade underline ── */
+.mark-underline {
+  position: relative;
+  display: inline;
+  white-space: nowrap;
+}
+.mark-underline::after {
+  content: '';
+  position: absolute;
+  left: -2px; right: -2px;
+  bottom: -0.14em;
+  height: 0.25em;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 12' preserveAspectRatio='none'%3E%3Cpath d='M1,9 C12,4 25,11 38,7 C51,3 63,10 76,6 C85,3 92,8 99,6' stroke='%23e07636' stroke-width='3.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
 
 /* ── Sponsors ── */
 .sponsor-tier { margin-bottom: 2.5rem; }
