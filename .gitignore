@@ -40,5 +40,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Videos - too large for GitHub (host on CDN)
-*.mp4
+# Videos served from public/ (no Blob transfer limits)
