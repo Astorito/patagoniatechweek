@@ -125,7 +125,7 @@
               <video class="tematica-video" autoplay muted loop playsinline preload="auto" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;z-index:0;">
                 <source src="sost_tecnologica.webm" type="video/webm">
               </video>
-              <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(0,0,0,0.82) 0%,rgba(0,0,0,0.25) 45%,transparent 100%);"></div>
+              <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(0,0,0,0.88) 0%,rgba(0,0,0,0.55) 50%,rgba(0,0,0,0.35) 100%);"></div>
               <div style="position:absolute;bottom:2rem;left:2rem;right:2rem;z-index:2;">
                 <span class="material-symbols-outlined text-primary mb-3 block">bolt</span>
                 <h3 class="text-2xl font-headline-md mb-2">Energía, Industria y Soberanía Tecnológica</h3>
@@ -137,7 +137,7 @@
               <video class="tematica-video" autoplay muted loop playsinline preload="auto" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;z-index:0;">
                 <source src="ai_aplicada.mp4" type="video/mp4">
               </video>
-              <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(0,0,0,0.82) 0%,rgba(0,0,0,0.25) 45%,transparent 100%);"></div>
+              <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(0,0,0,0.88) 0%,rgba(0,0,0,0.55) 50%,rgba(0,0,0,0.35) 100%);"></div>
               <div style="position:absolute;bottom:2rem;left:2rem;right:2rem;z-index:2;">
                 <span class="material-symbols-outlined text-primary text-4xl mb-3 block">smart_toy</span>
                 <h3 class="text-xl font-headline-md mb-2">IA &amp; Agentes Autónomos</h3>
@@ -149,7 +149,7 @@
               <video class="tematica-video" autoplay muted loop playsinline preload="auto" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;z-index:0;">
                 <source src="infra_digital.webm" type="video/webm">
               </video>
-              <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(0,0,0,0.82) 0%,rgba(0,0,0,0.25) 45%,transparent 100%);"></div>
+              <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(0,0,0,0.88) 0%,rgba(0,0,0,0.55) 50%,rgba(0,0,0,0.35) 100%);"></div>
               <div style="position:absolute;bottom:2rem;left:2rem;right:2rem;z-index:2;">
                 <span class="material-symbols-outlined text-primary text-4xl mb-3 block">rocket_launch</span>
                 <h3 class="text-xl font-headline-md mb-2">Innovación, Startups y Escalamiento</h3>
@@ -161,7 +161,7 @@
               <video class="tematica-video" autoplay muted loop playsinline preload="auto" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;z-index:0;">
                 <source src="biotech_salud.webm" type="video/webm">
               </video>
-              <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(0,0,0,0.82) 0%,rgba(0,0,0,0.25) 45%,transparent 100%);"></div>
+              <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(0,0,0,0.88) 0%,rgba(0,0,0,0.55) 50%,rgba(0,0,0,0.35) 100%);"></div>
               <div style="position:absolute;bottom:2rem;left:2rem;right:2rem;z-index:2;">
                 <span class="material-symbols-outlined text-primary text-4xl mb-3 block">token</span>
                 <h3 class="text-xl font-headline-md mb-2">Blockchain, Tokenización y Nuevos Mercados</h3>
@@ -173,7 +173,7 @@
               <video class="tematica-video" autoplay muted loop playsinline preload="auto" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;z-index:0;">
                 <source src="infra_digital.webm" type="video/webm">
               </video>
-              <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(0,0,0,0.82) 0%,rgba(0,0,0,0.25) 45%,transparent 100%);"></div>
+              <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(0,0,0,0.88) 0%,rgba(0,0,0,0.55) 50%,rgba(0,0,0,0.35) 100%);"></div>
               <div style="position:absolute;bottom:2rem;left:2rem;right:2rem;z-index:2;">
                 <span class="material-symbols-outlined text-primary text-4xl mb-3 block">account_balance</span>
                 <h3 class="text-xl font-headline-md mb-2">Gobierno Digital, Datos y Transparencia</h3>
@@ -506,6 +506,14 @@ patagoniatechweek.ar</p>
 
   <!-- Scripts -->
   <script src="ptw-main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.tematica-video').forEach(function(v) {
+        v.muted = true;
+        v.play().catch(function() {});
+      });
+    });
+  </script>
 
   <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
