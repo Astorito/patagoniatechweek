@@ -2,6 +2,10 @@
    Patagonia Tech Week — Custom Styles
    ═══════════════════════════════════════════ */
 
+/* ── Hide scrollbar ── */
+html { scrollbar-width: none; }
+html::-webkit-scrollbar { display: none; }
+
 /* ── Body background ── */
 body {
   background-color: #050608;
